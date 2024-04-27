@@ -1,35 +1,78 @@
-import { Text, SafeAreaView, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Keyboard, StyleSheet, SafeAreaView, StatusBar, Platform, Alert } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { useFonts } from 'expo-font';
 
-// You can import supported modules from npm
-import { Card } from 'react-native-paper';
+import { AppProvider, useAppContext } from './context/AppContext';
+import { colors } from './assets/colors/colors';
 
-// or any files within the Snack
-import AssetExample from './components/AssetExample';
+import SplashScreen from './screens/SplashScreen';
+import HomeNav from './navigation/HomeNav';
+import LoginNav from './navigation/LoginNav';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+const App = () => {
+
+  useEffect(()=>{
+    // unfocus from text inputs when keyboard hides
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      // This will blur the currently focused input field
+      Keyboard.dismiss();
+    });
+
+    return () => {
+      keyboardDidHideListener.remove();
+    };
+
+  }, []);
+
+  // load fonts
+  const [fontsLoaded] = useFonts({
+    'ms-light': require('./assets/fonts/Montserrat-Light.ttf'),
+    'ms-regular': require('./assets/fonts/Montserrat-Regular.ttf'),
+    'ms-semibold': require('./assets/fonts/Montserrat-SemiBold.ttf'),
+    'ms-bold': require('./assets/fonts/Montserrat-Bold.ttf'),
+  }); 
+
+  if (!fontsLoaded) {
+    return <SplashScreen/>
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.paragraph}>
-        Change code in the editor and watch it change on your phone! Save to get a shareable url.
-      </Text>
-      <Card>
-        <AssetExample />
-      </Card>
-    </SafeAreaView>
+    <NavigationContainer>
+      <AppProvider>
+        <AppContent/>
+      </AppProvider>
+    </NavigationContainer>
   );
 }
+
+const AppContent = () => {
+  const { isLoggedIn } = useAppContext();
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <GestureHandlerRootView style={styles.container}>
+        <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
+        <Stack.Navigator>
+          {!isLoggedIn ? (
+            <Stack.Screen name="LoginNav" component={LoginNav} options={{headerShown: false}} />
+          ) : (
+            <Stack.Screen name="HomeNav" component={HomeNav} options={{headerShown: false}} />
+          )}
+        </Stack.Navigator>
+      </GestureHandlerRootView>
+    </SafeAreaView>
+  )
+}
+
+export default App;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-    padding: 8,
-  },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
+  }
 });
