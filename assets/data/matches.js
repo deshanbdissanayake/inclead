@@ -1,35 +1,47 @@
 const getMatchStats = async () => {
     let data = [
         {
-            _id: 1, 
+            id: 1, 
             players: [
                 {
-                    _id: 1, 
+                    id: 1, 
                     name: 'Desh', 
                     image: 'https://drive.usercontent.google.com/download?id=1fcWtZnqJspo6Q5l3ioBgrYHdQPJcrhJo',
-                    team: 'A',
-                    match_stt: 'won'
+                    team: 'white',
+                    match_stt: 'won',
+                    points: 9, //if normal one => 1 point, red_pot => 3 points
+                    minus_points: 1,
+                    red_pot: 1,
                 },
                 {
-                    _id: 2, 
+                    id: 2, 
                     name: 'Chanuki', 
                     image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-                    team: 'A',
-                    match_stt: 'won'
+                    team: 'white',
+                    match_stt: 'won',
+                    points: 2,
+                    minus_points: 1,
+                    red_pot: 0,
                 },
                 {
-                    _id: 3, 
+                    id: 3, 
                     name: 'Sam', 
                     image: 'https://drive.usercontent.google.com/download?id=1xVwDWcgKlJRzX4392wuYFejlQY-DAjI3',
-                    team: 'B',
-                    match_stt: 'lost'
+                    team: 'black',
+                    match_stt: 'lost',
+                    points: 4,
+                    minus_points: 1,
+                    red_pot: 0,
                 },
                 {
-                    _id: 4, 
+                    id: 4, 
                     name: 'Melani', 
                     image: 'https://drive.usercontent.google.com/download?id=1yjfuXatkxeL9_kwvhBVdPlY2Ai1iZ4RL',
-                    team: 'B',
-                    match_stt: 'lost'
+                    team: 'black',
+                    match_stt: 'lost',
+                    points: 4,
+                    minus_points: 1,
+                    red_pot: 0,
                 },
             ],
             type: 'carrom',
@@ -38,35 +50,47 @@ const getMatchStats = async () => {
             status: 'active'
         },
         {
-            _id: 2, 
+            id: 2, 
             players: [
                 {
-                    _id: 1, 
+                    id: 1, 
                     name: 'Desh', 
                     image: 'https://drive.usercontent.google.com/download?id=1fcWtZnqJspo6Q5l3ioBgrYHdQPJcrhJo',
-                    team: 'A',
-                    match_stt: 'won'
+                    team: 'white',
+                    match_stt: 'won',
+                    points: 10,
+                    minus_points: 1,
+                    red_pot: 1,
                 },
                 {
-                    _id: 4, 
+                    id: 4, 
                     name: 'Melani', 
                     image: 'https://drive.usercontent.google.com/download?id=1yjfuXatkxeL9_kwvhBVdPlY2Ai1iZ4RL',
-                    team: 'A',
-                    match_stt: 'won'
+                    team: 'white',
+                    match_stt: 'won',
+                    points: 1,
+                    minus_points: 1,
+                    red_pot: 0,
                 },
                 {
-                    _id: 2, 
+                    id: 2, 
                     name: 'Chanuki', 
                     image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-                    team: 'B',
-                    match_stt: 'lost'
+                    team: 'black',
+                    match_stt: 'lost',
+                    points: 3,
+                    minus_points: 1,
+                    red_pot: 0,
                 },
                 {
-                    _id: 3, 
+                    id: 3, 
                     name: 'Sam', 
                     image: 'https://drive.usercontent.google.com/download?id=1xVwDWcgKlJRzX4392wuYFejlQY-DAjI3',
-                    team: 'B',
-                    match_stt: 'lost'
+                    team: 'black',
+                    match_stt: 'lost',
+                    points: 4,
+                    minus_points: 1,
+                    red_pot: 0,
                 },
             ],
             type: 'carrom',

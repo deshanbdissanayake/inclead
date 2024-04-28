@@ -1,5 +1,5 @@
 import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { colors } from '../assets/colors/colors'
 import Subtitle from '../components/general/Subtitle'
 import LeaderBoardCard from '../components/app/LeaderBoardCard'
@@ -13,86 +13,16 @@ const Leaderboard = () => {
     const navigation = useNavigation();
 
     const [loading, setLoading] = useState(true);
-    const [matchStats, setMatchStats] = useState(null);
     const [refreshing, setRefreshing] = useState(true);
 
-    const cardData = [
-        {
-            id: '1',
-            name: 'Chanuki',
-            image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-            value: '75%',
-            place: '01',
-        },
-        {
-            id: '2',
-            name: 'Chanuki',
-            image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-            value: '75%',
-            place: '01',
-        },
-        {
-            id: '3',
-            name: 'Chanuki',
-            image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-            value: '75%',
-            place: '01',
-        },
-        {
-            id: '4',
-            name: 'Chanuki',
-            image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-            value: '75%',
-            place: '01',
-        },
-        {
-            id: '5',
-            name: 'Chanuki',
-            image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-            value: '75%',
-            place: '01',
-        },
-        {
-            id: '6',
-            name: 'Chanuki',
-            image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-            value: '75%',
-            place: '01',
-        },
-        {
-            id: '7',
-            name: 'Chanuki',
-            image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-            value: '75%',
-            place: '01',
-        },
-        {
-            id: '8',
-            name: 'Chanuki',
-            image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-            value: '75%',
-            place: '01',
-        },
-        {
-            id: '9',
-            name: 'Chanuki',
-            image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-            value: '75%',
-            place: '01',
-        },
-        {
-            id: '10',
-            name: 'Chanuki',
-            image: 'https://drive.usercontent.google.com/download?id=1h5FRUM-7tt9zfGxxrjVOitOJZTCpZiw0',
-            value: '75%',
-            place: '01',
-        },
-    ]
+    const [cardData, setCardData] = useState(null);
 
     const getData = async () => {
         try {
             let data = await getMatchStats();
-            setMatchStats(data)
+            if(data && data.length > 0){
+                await getLeaderboard(data);
+            }
         } catch (error) {
             console.log('error at leaderboard.js: ', error)
         } finally {
@@ -107,13 +37,63 @@ const Leaderboard = () => {
         },[])
     )
 
+    const getLeaderboard = async (data) => {
+        let playersArr = [];
+    
+        data.forEach((match) => {
+            match.players.forEach((player) => {
+                let existingPlayerIndex = playersArr.findIndex((p) => p.id === player.id);
+    
+                if (existingPlayerIndex === -1) {
+                    playersArr.push({
+                        id: player.id,
+                        name: player.name,
+                        image: player.image,
+                        total_matches: 1,
+                        total_wins: match.status === 'won' ? 1 : 0,
+                        total_points: player.points,
+                        total_minus_points: player.minus_points,
+                        total_red_pots: player.red_pot ? 1 : 0,
+                    });
+                } else {
+                    playersArr[existingPlayerIndex].total_matches++;
+                    if (match.status === 'won') {
+                        playersArr[existingPlayerIndex].total_wins++;
+                    }
+                    playersArr[existingPlayerIndex].total_points += player.points;
+                    playersArr[existingPlayerIndex].total_minus_points += player.minus_points;
+                    if (player.red_pot) {
+                        playersArr[existingPlayerIndex].total_red_pots++;
+                    }
+                }
+            });
+        });
+    
+        // Calculate value and sort players
+        playersArr.forEach((player) => {
+            let value = ((player.total_points - player.total_minus_points) / (player.total_matches * 11) * 100).toFixed(2);
+            player.value = parseFloat(value) >= 0 ? value : '0';
+        });
+    
+        // Sort players based on value
+        playersArr.sort((a, b) => b.value - a.value);
+    
+        // Assign place
+        playersArr.forEach((player, index) => {
+            player.place = index + 1;
+        });
+    
+        setCardData(playersArr);
+    };
+    
+    
     const onRefresh = () => {
         setRefreshing(true);
         getData();
     }
 
-    const handleNewGameClick = () => {
-        navigation.navigate('New Game')
+    const handlePlayerClick = (cardData) => {
+        navigation.navigate('Player Single', { playerData: cardData })
     }
 
     if(loading){
@@ -128,7 +108,7 @@ const Leaderboard = () => {
                     <FlatList
                         data={cardData}
                         keyExtractor={(item) => item.id.toString()}
-                        renderItem={({item}) => <LeaderBoardCard cardData={item}/>}
+                        renderItem={({item}) => <LeaderBoardCard cardData={item} onPress={handlePlayerClick} />}
                         showsVerticalScrollIndicator={false}
                         refreshControl={
                             <RefreshControl
@@ -141,9 +121,6 @@ const Leaderboard = () => {
                     <NoData text={'No Data Yet!'} />
                 )}
             </View>
-            <TouchableOpacity onPress={handleNewGameClick} style={styles.addBtnWrapper}>
-                <Feather name="plus" size={40} color={colors.textColorSec} />
-            </TouchableOpacity>
         </View>
     )
 }
@@ -158,13 +135,5 @@ const styles = StyleSheet.create({
     },
     leaderboardWrapper: {
         flex: 1,
-    },
-    addBtnWrapper: {
-        position: 'absolute',
-        bottom: 25,
-        right: 25,
-        padding: 15,
-        backgroundColor: colors.bgColorSec,
-        borderRadius: 20,
     },
 })

@@ -4,16 +4,17 @@ import HomeScreen from '../screens/HomeScreen';
 import PlayersList from '../screens/PlayersList';
 import NewGameScreen from '../screens/NewGameScreen';
 import PlayerSingle from '../screens/PlayerSingle';
+import NewGameScoreScreen from '../screens/NewGameScoreScreen';
 
 const Stack = createStackNavigator();
 
-const HomeNav = () => {
+const GameNav = () => {
   return (
     <Stack.Navigator>
-        <Stack.Screen name="Home Screen" component={HomeScreen} options={{headerShown: false}} />
-        <Stack.Screen name="Player Single" component={PlayerSingle} options={{headerShown: false}} />
+        <Stack.Screen name="New Game" component={NewGameScreen} options={{headerShown: false}} />
+        <Stack.Screen name="New Game Score" component={NewGameScoreScreen} options={{headerShown: false}} />
     </Stack.Navigator>
   )
 }
 
-export default HomeNav
+export default GameNav

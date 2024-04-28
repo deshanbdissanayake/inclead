@@ -1,23 +1,38 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { colors } from '../../assets/colors/colors'
 import { Ionicons } from '@expo/vector-icons';
 
-const LeaderBoardCard = ({cardData}) => {
+const LeaderBoardCard = ({cardData, onPress}) => {
+    
+    let bgColor = {backgroundColor: colors.bgColorTer};
+    let bottomBorder = null;
+    if(cardData.place == '1'){
+        bgColor = { backgroundColor: colors.bgGold };
+    }else if(cardData.place == '2'){
+        bgColor = { backgroundColor: colors.bgSilver };
+    }else if(cardData.place == '3'){
+        bgColor = { backgroundColor: colors.bgBronze };
+        bottomBorder = { borderBottomColor: colors.textColorPri, borderBottomWidth: 2, marginBottom: 10 };
+    }
+    
     return (
-        <View style={styles.container}>
-            <View style={styles.nameWrapper}>
-                <Image style={styles.imageStyles} source={{uri: cardData.image}} />
-                <Text style={styles.nameTextStyles}>{cardData.name}</Text>
-            </View>
-            <View style={styles.valueWrapper}>
-                <Ionicons name="disc" size={24} color={colors.gold} />
-                <Text style={styles.valueTextStyles}>{cardData.value}</Text>
-            </View>
-            <View style={styles.placeTextWrapper}>
-                <Text style={styles.placeTextStyles}>{cardData.place}</Text>
-            </View>
-        </View>
+        <>
+            <TouchableOpacity style={[styles.container, bgColor]} onPress={() => onPress(cardData)}>
+                <View style={styles.nameWrapper}>
+                    <Image style={styles.imageStyles} source={{uri: cardData.image}} />
+                    <Text style={styles.nameTextStyles}>{cardData.name}</Text>
+                </View>
+                <View style={styles.valueWrapper}>
+                    <Ionicons name="disc" size={24} color={colors.gold} />
+                    <Text style={styles.valueTextStyles}>{cardData.value}%</Text>
+                </View>
+                <View style={styles.placeTextWrapper}>
+                    <Text style={styles.placeTextStyles}>{cardData.place}</Text>
+                </View>
+            </TouchableOpacity>
+            <View style={bottomBorder}></View>
+        </>
     )
 }
 
@@ -25,7 +40,6 @@ export default LeaderBoardCard
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: colors.bgColorTer,
         marginBottom: 10,
         paddingVertical: 10,
         paddingHorizontal: 15,
@@ -43,6 +57,7 @@ const styles = StyleSheet.create({
         height: 50,
         objectFit: 'cover',
         borderRadius: 8,
+        backgroundColor: colors.bgColor,
     },
     nameTextStyles: {
         fontSize: 14,
@@ -70,7 +85,7 @@ const styles = StyleSheet.create({
     valueWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: 70,
+        width: 90,
         justifyContent: 'space-between',
     },
     valueTextStyles: {

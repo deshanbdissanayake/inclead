@@ -1,7 +1,7 @@
 const colorsLight = {
     bgColor: '#FFFFFF',
     bgColorSec: '#373737',
-    bgColorTer: '#f0f0f0',
+    bgColorTer: '#f2f2f2',
 
     textColorPri: '#474747',
     textColorSec: '#ffffff',
@@ -21,6 +21,15 @@ const colorsLight = {
 
     transparentDark: 'rgba(0, 0, 0, 0.5)',
 
+    success : '#406b42',
+    danger : '#d43b24',
+    warning : '#db913b',
+    info : '#3b70db',
+
+    bgGold: '#fff9e2',
+    bgSilver: '#cccccc',
+    bgBronze: '#ffe6cc',
+
     
     primaryDark : '#910c3e', //dark pink
 
@@ -32,10 +41,7 @@ const colorsLight = {
     borderGrayDark : '#2b2b2b',
     borderGrayExtraLight : '#ddd',
 
-    success : '#406b42',
-    danger : '#d43b24',
-    warning : '#db913b',
-    info : '#3b70db',
+    
 
     successLight : '#e8ffe9',
     dangerLight : '#ffe8e8',
@@ -54,7 +60,7 @@ const colorsLight = {
 const colorsDark = {
   bgColor: '#373737',
   bgColorSec: '#FFFFFF',
-  bgColorTer: '#e8e8e8',
+  bgColorTer: '#f2f2f2',
 
   textColorPri: '#fff7fa',
   textColorSec: '#373737',
@@ -73,6 +79,15 @@ const colorsDark = {
   gold: '#FFD700',
 
   transparentDark: 'rgba(0, 0, 0, 0.5)',
+
+  success : '#406b42',
+  danger : '#d43b24',
+  warning : '#db913b',
+  info : '#3b70db',
+
+  bgGold: '#fff9e2',
+  bgSilver: '#cccccc',
+  bgBronze: '#ffe6cc',
 }
 
 const getThemeColors = () => {

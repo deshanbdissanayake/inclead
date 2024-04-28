@@ -11,6 +11,7 @@ import { colors } from './assets/colors/colors';
 import SplashScreen from './screens/SplashScreen';
 import HomeNav from './navigation/HomeNav';
 import LoginNav from './navigation/LoginNav';
+import BottomNav from './navigation/BottomNav';
 
 const Stack = createStackNavigator();
 
@@ -61,7 +62,7 @@ const AppContent = () => {
           {!isLoggedIn ? (
             <Stack.Screen name="LoginNav" component={LoginNav} options={{headerShown: false}} />
           ) : (
-            <Stack.Screen name="HomeNav" component={HomeNav} options={{headerShown: false}} />
+            <Stack.Screen name="BottomNav" component={BottomNav} options={{headerShown: false}} />
           )}
         </Stack.Navigator>
       </GestureHandlerRootView>
