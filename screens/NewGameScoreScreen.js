@@ -1,4 +1,4 @@
-import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { colors } from '../assets/colors/colors'
 import Header from '../components/general/Header'
@@ -161,7 +161,10 @@ const NewGameScoreScreen = () => {
                     {matchData.players && matchData.players.length > 0 && 
                         matchData.players.map((player, index)=> player.team == 'white' && (
                             <View style={[styles.scoreWrapper]} key={player.id}>
-                                <Text style={styles.nameTextStyles}>{player.name}</Text>
+                                <View style={styles.nameWrapper}>
+                                    <Image style={styles.imageStyles} source={{ uri: player.image }} />
+                                    <Text style={styles.nameTextStyles}>{player.name}</Text>
+                                </View>
                                 <View style={styles.playerScoreWrapper}>
                                     <ScoreCard type={'white'} player_id={player.id} value={player.points} setValue={changePlayerData} />
                                     <ScoreCard type={'black'} player_id={player.id} value={player.minus_points} setValue={changePlayerData} />
@@ -176,7 +179,10 @@ const NewGameScoreScreen = () => {
                     {matchData.players && matchData.players.length > 0 && 
                         matchData.players.map((player, index)=> player.team == 'black' && (
                             <View style={[styles.scoreWrapper]} key={player.id}>
-                                <Text style={styles.nameTextStyles}>{player.name}</Text>
+                                <View style={styles.nameWrapper}>
+                                    <Image style={styles.imageStyles} source={{ uri: player.image }} />
+                                    <Text style={styles.nameTextStyles}>{player.name}</Text>
+                                </View>
                                 <View style={styles.playerScoreWrapper}>
                                     <ScoreCard type={'white'} player_id={player.id} value={player.minus_points} setValue={changePlayerData} />
                                     <ScoreCard type={'black'} player_id={player.id} value={player.points} setValue={changePlayerData} />
@@ -220,15 +226,28 @@ const styles = StyleSheet.create({
     teamWrapper: {
         marginBottom: 20,
         backgroundColor: colors.bgColorTer,
-        paddingVertical: 20,
+        paddingVertical: 10,
         paddingHorizontal: 10,
         borderRadius: 10,
+    },
+    nameWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    imageStyles: {
+        width: 50,
+        height: 50,
+        resizeMode: 'cover',
+        borderWidth: 1,
+        borderColor: colors.textColorPri,
+        borderRadius: 50,
+        marginRight: 15,
     },
     scoreWrapper: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginVertical: 20,
+        marginVertical: 10,
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 5,
