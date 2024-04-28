@@ -22,7 +22,7 @@ const NewGameScreen = () => {
   const [teamBlack, setTeamBlack] = useState(null);
 
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => [1, '30%'], []);
+  const snapPoints = useMemo(() => [1, '25%'], []);
 
   const handleGoBack = () => {
     navigation.goBack();
