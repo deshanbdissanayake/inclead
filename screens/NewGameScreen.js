@@ -24,10 +24,6 @@ const NewGameScreen = () => {
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => [1, '25%'], []);
 
-  const handleGoBack = () => {
-    navigation.goBack();
-  }
-
   const getPlayersFunc = async () => {
     try {
       let data = await getPlayers();
@@ -52,33 +48,23 @@ const NewGameScreen = () => {
 
   const handlePlayer = (type, id) => {
     const playerIndex = players.findIndex((player) => player.id === id);
- 
+  
     if (playerIndex !== -1) {
-        if (type === 'white') {
-          const selectedPlayerIndex = teamWhite && teamWhite.findIndex((player) => player.id == id);
-          console.log(selectedPlayerIndex)
-          
-          if (selectedPlayerIndex && selectedPlayerIndex !== -1) {
-            setTeamWhite((prevData) => {
-              const updatedData = [...prevData];
-              updatedData.splice(selectedPlayerIndex, 1);
-              return updatedData;
-            });
-          }else{
-            setTeamWhite((prevData) => [...(prevData || []), players[playerIndex]]);
-          }
-        } else if (type === 'black') {
-          const selectedPlayerIndex = teamBlack && teamBlack.findIndex((player) => player.id == id);
-          if (selectedPlayerIndex && selectedPlayerIndex !== -1) {
-            setTeamBlack((prevData) => {
-              const updatedData = [...prevData];
-              updatedData.splice(selectedPlayerIndex, 1);
-              return updatedData;
-            });
-          }else{
-            setTeamBlack((prevData) => [...(prevData || []), players[playerIndex]]);
-          }
+      if (type === 'white') {
+        const isSelected = teamWhite && teamWhite.some((player) => player.id === id);
+        if (isSelected) {
+          setTeamWhite((prevData) => prevData.filter((player) => player.id !== id));
+        } else {
+          setTeamWhite((prevData) => [...(prevData || []), players[playerIndex]]);
         }
+      } else if (type === 'black') {
+        const isSelected = teamBlack && teamBlack.some((player) => player.id === id);
+        if (isSelected) {
+          setTeamBlack((prevData) => prevData.filter((player) => player.id !== id));
+        } else {
+          setTeamBlack((prevData) => [...(prevData || []), players[playerIndex]]);
+        }
+      }
     }
   };
 
@@ -108,7 +94,6 @@ const NewGameScreen = () => {
 
     navigation.navigate('New Game Score', { teamWhite, teamBlack });
   }
-
 
   const resetFunc = () => {
     setPlayerNum(0)
@@ -246,7 +231,7 @@ const NewGameScreen = () => {
           handleIndicatorStyle={{backgroundColor: colors.textColorSec}}
       >
           <View style={styles.bottomSheetContainer}>
-            <Text style={styles.instructionsTextStyles}>* Press once to select team members. Long press to un-select team members.</Text>
+            <Text style={styles.instructionsTextStyles}>* Press once to select team members. Press again to un-select team members.</Text>
             <Text style={styles.instructionsTextStyles}>** If the number of players is 2, then Team White and Team Black must each have one player. If the number of players is 4, then each team must have two players.</Text>
           </View>
       </BottomSheet>

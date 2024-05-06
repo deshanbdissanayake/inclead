@@ -11,20 +11,20 @@ const ScoreCard = ({type, player_id, value, setValue}) => {
                 return colors.gold;
             case 'black':
                 return colors.black;
+            case 'foul':
+                return colors.disabled;
             default:
                 return colors.danger;
         }
     };
 
     const handleIncrement = () => {
-        if ((type === 'red' && value < 1) || ((type === 'white' || type === 'black'))) {
+        if ((type === 'red' && value < 1) || ((type === 'white' || type === 'black' || type === 'foul'))) {
             setValue(value + 1, player_id, type);
         } else {
             if (type === 'red') {
                 Alert.alert('Error', 'Already Red has potted!');
-            } else {
-                Alert.alert('Error', 'Maximum value for white and black score is 9!');
-            }
+            } 
         }
     };
 

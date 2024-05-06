@@ -1,17 +1,23 @@
 import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import { colors } from '../assets/colors/colors'
 import Header from '../components/general/Header'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import Subtitle from '../components/general/Subtitle'
 import ScoreCard from '../components/app/ScoreCard'
 import Button from '../components/general/Button'
+import MiniButton from '../components/general/MiniButton'
+import { Entypo } from '@expo/vector-icons'
+import BottomSheet from '@gorhom/bottom-sheet';
 
 const NewGameScoreScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
 
     const { teamWhite, teamBlack } = route.params;
+
+    const bottomSheetRef = useRef(null);
+    const snapPoints = useMemo(() => [1, '25%'], []);
 
     const [matchData, setMatchData] = useState({
         players: [],
@@ -40,7 +46,8 @@ const NewGameScoreScreen = () => {
                     match_stt: null,
                     points: 0,
                     minus_points: 0,
-                    red_pot: 0
+                    red_pot: 0,
+                    foul: 0
                 });
             });
         };
@@ -86,6 +93,8 @@ const NewGameScoreScreen = () => {
                 return;
             }
             updatedPlayers[playerIndex].red_pot = newValue;
+        }else if(type == 'foul'){
+            updatedPlayers[playerIndex].foul = newValue;
         } else {
             console.log("Invalid type");
             return;
@@ -99,7 +108,8 @@ const NewGameScoreScreen = () => {
             ...player,
             points: 0,
             minus_points: 0,
-            red_pot: 0
+            red_pot: 0,
+            foul: 0
         }));
     
         setMatchData(prevData => ({
@@ -111,27 +121,28 @@ const NewGameScoreScreen = () => {
     const updateWinningTeam = (type) => {
         const updatedPlayers = matchData.players.map((player) => ({
             ...player,
-            match_stt: player.team === type ? 'won' : 'lost'
+            match_stt: player.team == type ? 'won' : 'lost'
         }));
     
         setMatchData(prevData => ({
             ...prevData,
             players: updatedPlayers
         }));
-
-        //upload to server before goto score board
-        navigation.navigate('New Game Score Board', { matchData: matchData })
     };
-    
-    
+
+    useEffect(() => {
+        // Navigate to the 'New Game Score Board' after match data is updated
+        if (matchData.players && matchData.players.length > 0) {
+            if(matchData.players[0].match_stt){
+                navigation.navigate('New Game Score Board', { matchData });
+            }
+        }
+    }, [matchData]);
+
     const handleFinishClick = () => {
         const checkRedPot = matchData.players.some((player) => player.red_pot === 1);
         const checkGameFinishWhite = matchData.players.some((player) => player.team === 'white' && player.points >= 9);
         const checkGameFinishBlack = matchData.players.some((player) => player.team === 'black' && player.points >= 9);
-
-        console.log('checkRedPot', checkRedPot)
-        console.log('checkGameFinishWhite', checkGameFinishWhite)
-        console.log('checkGameFinishBlack', checkGameFinishBlack)
 
         if (checkRedPot && (checkGameFinishWhite || checkGameFinishBlack)) {
             Alert.alert('Confirm', 'Who won the game?', [
@@ -148,10 +159,23 @@ const NewGameScoreScreen = () => {
     const handleGoBack = () => {
         navigation.goBack();
     }
+    
+    const handleInstructions = () => {
+        bottomSheetRef.current.expand();
+    }
 
     return (
         <View style={styles.container}>
-            <Header text={'Game Score'} handleGoBack={handleGoBack} />
+            <Header 
+                text={'Game Score'} 
+                handleGoBack={handleGoBack} 
+                component={
+                    <MiniButton
+                        func={handleInstructions}
+                        content={<Entypo name="info-with-circle" size={24} color={colors.textColorPri} />}
+                    />
+                } 
+            />
             <ScrollView 
                 contentContainerStyle={styles.contentContainer} 
                 showsVerticalScrollIndicator={false} 
@@ -169,6 +193,7 @@ const NewGameScoreScreen = () => {
                                     <ScoreCard type={'white'} player_id={player.id} value={player.points} setValue={changePlayerData} />
                                     <ScoreCard type={'black'} player_id={player.id} value={player.minus_points} setValue={changePlayerData} />
                                     <ScoreCard type={'red'} player_id={player.id} value={player.red_pot} setValue={changePlayerData} />
+                                    <ScoreCard type={'foul'} player_id={player.id} value={player.foul} setValue={changePlayerData} />
                                 </View>
                             </View>
                         ))
@@ -187,6 +212,7 @@ const NewGameScoreScreen = () => {
                                     <ScoreCard type={'white'} player_id={player.id} value={player.minus_points} setValue={changePlayerData} />
                                     <ScoreCard type={'black'} player_id={player.id} value={player.points} setValue={changePlayerData} />
                                     <ScoreCard type={'red'} player_id={player.id} value={player.red_pot} setValue={changePlayerData} />
+                                    <ScoreCard type={'foul'} player_id={player.id} value={player.foul} setValue={changePlayerData} />
                                 </View>
                             </View>
                         ))
@@ -207,6 +233,27 @@ const NewGameScoreScreen = () => {
                     />
                 </View>
             </ScrollView>
+            <BottomSheet 
+                ref={bottomSheetRef} 
+                index={0} 
+                snapPoints={snapPoints} 
+                backgroundStyle={{backgroundColor: colors.bgColorSec}}
+                handleIndicatorStyle={{backgroundColor: colors.textColorSec}}
+            >
+                <View style={styles.bottomSheetContainer}>
+                    <Text style={styles.instructionsTextStyles}>
+                        <View style={styles.instructionCarrommenWrapper}>
+                            <View style={[styles.instructionCarrommanStyles, {backgroundColor: colors.gold}]}></View><Text style={styles.instructionCarrommanTextStyles}> - White</Text>
+                            <View style={[styles.instructionCarrommanStyles, {backgroundColor: colors.black}]}></View><Text style={styles.instructionCarrommanTextStyles}> - Black</Text>
+                            <View style={[styles.instructionCarrommanStyles, {backgroundColor: colors.danger}]}></View><Text style={styles.instructionCarrommanTextStyles}> - Red</Text>
+                            <View style={[styles.instructionCarrommanStyles, {backgroundColor: colors.disabled}]}></View><Text style={styles.instructionCarrommanTextStyles}> - Foul</Text>
+                        </View>
+                    </Text>
+
+                    <Text style={styles.instructionsTextStyles}>** If your own carromman is pocketed 1 point. If red is pocketed 2 points.</Text>
+                    <Text style={styles.instructionsTextStyles}>*** If your opponents carromman is pocketed -1 points. Foul -2 points.</Text>
+                </View>
+            </BottomSheet>
         </View>
     )
 }
@@ -220,6 +267,19 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 15,
     },
+    bottomSheetContainer: {
+        flex: 1,
+        backgroundColor: colors.bgColor,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+    },
+    instructionsTextStyles: {
+        fontSize: 12,
+        fontFamily: 'ms-regular',
+        color: colors.textColorPri,
+        textAlign: 'justify',
+        marginBottom: 10,
+    },
     contentContainer: {
         flexGrow: 1,
     },
@@ -231,7 +291,8 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     nameWrapper: {
-        flexDirection: 'row',
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
     },
     imageStyles: {
@@ -241,7 +302,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: colors.textColorPri,
         borderRadius: 50,
-        marginRight: 15,
     },
     scoreWrapper: {
         flexDirection: 'row',
@@ -254,12 +314,29 @@ const styles = StyleSheet.create({
         backgroundColor: colors.bgColor,
     },
     nameTextStyles: {
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: 'ms-regular',
         color: colors.textColorPri,
     },
     playerScoreWrapper: {
+        flex: 3,
         flexDirection: 'row',
         justifyContent: 'space-between',
+    },
+    instructionCarrommenWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    instructionCarrommanStyles: {
+        width: 20,
+        height: 10,
+        borderRadius: 50,
+        borderWidth: 1,
+        marginLeft: 15,
+    },
+    instructionCarrommanTextStyles: {
+        fontSize: 12,
+        fontFamily: 'ms-regular',
+        color: colors.textColorPri,
     },
 })

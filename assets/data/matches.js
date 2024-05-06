@@ -12,6 +12,7 @@ const getMatchStats = async () => {
                     points: 9, //if normal one => 1 point, red_pot => 3 points
                     minus_points: 1,
                     red_pot: 1,
+                    foul: 0,
                 },
                 {
                     id: 2, 
@@ -22,6 +23,7 @@ const getMatchStats = async () => {
                     points: 2,
                     minus_points: 1,
                     red_pot: 0,
+                    foul: 0,
                 },
                 {
                     id: 3, 
@@ -32,6 +34,7 @@ const getMatchStats = async () => {
                     points: 4,
                     minus_points: 1,
                     red_pot: 0,
+                    foul: 0,
                 },
                 {
                     id: 4, 
@@ -42,6 +45,7 @@ const getMatchStats = async () => {
                     points: 4,
                     minus_points: 1,
                     red_pot: 0,
+                    foul: 0,
                 },
             ],
             type: 'carrom',
@@ -61,6 +65,7 @@ const getMatchStats = async () => {
                     points: 10,
                     minus_points: 1,
                     red_pot: 1,
+                    foul: 0,
                 },
                 {
                     id: 4, 
@@ -71,6 +76,7 @@ const getMatchStats = async () => {
                     points: 1,
                     minus_points: 1,
                     red_pot: 0,
+                    foul: 0,
                 },
                 {
                     id: 2, 
@@ -81,6 +87,7 @@ const getMatchStats = async () => {
                     points: 3,
                     minus_points: 1,
                     red_pot: 0,
+                    foul: 0,
                 },
                 {
                     id: 3, 
@@ -91,6 +98,7 @@ const getMatchStats = async () => {
                     points: 4,
                     minus_points: 1,
                     red_pot: 0,
+                    foul: 0,
                 },
             ],
             type: 'carrom',
