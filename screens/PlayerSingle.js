@@ -22,7 +22,7 @@ const PlayerSingle = () => {
     >
       <Header text={'Player Stats'} handleGoBack={handleGoBack} />
       <View style={styles.contentContainer}>
-        <Image style={styles.imageStyles} source={{ uri: playerData.image }} />
+        <Image style={styles.imageStyles} source={{uri: `data:image/png;base64,${playerData.image}`}} />
         <Text style={styles.nameTextStyles}>{playerData.name}</Text>
         <View style={styles.tableStyles}>
           <View style={styles.rowStyles}>

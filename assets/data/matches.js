@@ -111,4 +111,8 @@ const getMatchStats = async () => {
     return data;
 }
 
-export { getMatchStats }
+const saveMatch = async () => {
+    return {stt: 'success', msg: 'Successful', data: []}
+}
+
+export { getMatchStats, saveMatch }

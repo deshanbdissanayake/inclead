@@ -104,6 +104,13 @@ const NewGameScoreScreen = () => {
     };
 
     const handleResetClick = () => {
+        Alert.alert('Confirm', 'Are you sure you want to reset match?', [
+            {text: 'cancel', onPress: () => null, style: 'cancel'},
+            {text: 'Reset', onPress: () => resetFunc()}
+        ])
+    };
+
+    const resetFunc = () => {
         const updatedPlayers = matchData.players.map((player) => ({
             ...player,
             points: 0,
@@ -116,7 +123,7 @@ const NewGameScoreScreen = () => {
             ...prevData,
             players: updatedPlayers
         }));
-    };
+    }
 
     const updateWinningTeam = (type) => {
         const updatedPlayers = matchData.players.map((player) => ({
@@ -186,7 +193,7 @@ const NewGameScoreScreen = () => {
                         matchData.players.map((player, index)=> player.team == 'white' && (
                             <View style={[styles.scoreWrapper]} key={player.id}>
                                 <View style={styles.nameWrapper}>
-                                    <Image style={styles.imageStyles} source={{ uri: player.image }} />
+                                    <Image style={styles.imageStyles} source={{uri: `data:image/png;base64,${player.image}`}} />
                                     <Text style={styles.nameTextStyles}>{player.name}</Text>
                                 </View>
                                 <View style={styles.playerScoreWrapper}>
@@ -205,7 +212,7 @@ const NewGameScoreScreen = () => {
                         matchData.players.map((player, index)=> player.team == 'black' && (
                             <View style={[styles.scoreWrapper]} key={player.id}>
                                 <View style={styles.nameWrapper}>
-                                    <Image style={styles.imageStyles} source={{ uri: player.image }} />
+                                    <Image style={styles.imageStyles} source={{uri: `data:image/png;base64,${player.image}`}} />
                                     <Text style={styles.nameTextStyles}>{player.name}</Text>
                                 </View>
                                 <View style={styles.playerScoreWrapper}>

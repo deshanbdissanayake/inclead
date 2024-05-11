@@ -11,7 +11,7 @@ const PlayerRow = ({ player }) => {
     return (
         <View style={styles.rowStyles}>
             <View style={styles.tableBodyStyles}>
-                <Image style={styles.playerImageStyles} source={{ uri: player.image}} />
+                <Image style={styles.playerImageStyles} source={{uri: `data:image/png;base64,${player.image}`}} />
                 <Text style={styles.tableBodyTextStyles}>{player.name}</Text>
             </View>
             <Text style={styles.tableBodyTextStyles}>

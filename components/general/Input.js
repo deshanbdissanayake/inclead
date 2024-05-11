@@ -31,7 +31,7 @@ const Input = ({keyboardType, value, onChangeText, placeholder, secureTextEntry,
                 secureTextEntry={secureTextEntry}
                 style={[
                     styles.inputTextStyles, 
-                    disabled && { color: colors.textColorSec } 
+                    disabled && { color: colors.textColorPri } 
                 ]}
                 editable={editable}
                 multiline={multiline}
@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
     },
     inputTextStyles: {
         fontSize: 14,
-        color: colors.textColorSec,
+        fontFamily: 'ms-regular',
+        color: colors.textColorPri,
         marginLeft: 10,
         width: '100%',
     },

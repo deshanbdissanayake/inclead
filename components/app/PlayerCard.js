@@ -8,7 +8,7 @@ const PlayerCard = ({ playerData, handleEditClick, handleDeleteClick }) => {
     return (
         <View style={styles.container}>
             <View style={styles.playerWrapper}>
-                <Image style={styles.imageStyles} source={{uri: playerData.image}} />
+                <Image style={styles.imageStyles} source={{uri: `data:image/png;base64,${playerData.image}`}} />
                 <Text style={styles.nameTextStyles}>{playerData.name}</Text>
             </View>
             <View style={styles.btnWrapper}>

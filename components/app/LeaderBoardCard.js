@@ -20,7 +20,7 @@ const LeaderBoardCard = ({cardData, onPress}) => {
         <>
             <TouchableOpacity style={[styles.container, bgColor]} onPress={() => onPress(cardData)}>
                 <View style={styles.nameWrapper}>
-                    <Image style={styles.imageStyles} source={{uri: cardData.image}} />
+                    <Image style={styles.imageStyles} source={{uri: `data:image/png;base64,${cardData.image}`}} />
                     <Text style={styles.nameTextStyles}>{cardData.name}</Text>
                 </View>
                 <View style={styles.valueWrapper}>
