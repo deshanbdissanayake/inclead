@@ -10,6 +10,7 @@ const getAllUsers = async () => {
             id: doc.id,
             username: doc.data().username,
             password: doc.data().password,
+            usertype: doc.data().usertype,
             status: doc.data().status
         }))
         .filter(user => user.status === 'active');
@@ -21,7 +22,8 @@ const saveUser = async (sentData) => {
     let formData = {
         username: sentData.username,
         password: sentData.password,
-        status: 'active'
+        usertype: sentData.usertype,
+        status: 'active',
     };
 
     try {

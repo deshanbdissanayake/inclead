@@ -17,30 +17,24 @@ const LoginScreen = () => {
 
   const handleSubmit = async () => {
     try {
-        // Fetch user data only if needed
-        const users = await getAllUsers();
-
-        // Check username availability directly in the query
-        const userAuth = users.some((user) => user.username === username);
-        
-        if (userAuth) {
-            const userCheck = users.some((user) => user.username === username && user.password === password);
-            
-            if(!userCheck){
-              Alert.alert('Error', 'Username or Password is incorrect!');
-              return;
-            }
-        }else{
-          // save in db
-          await saveUser({username: username, password: password})
-        }
-
-        // Store username only if it's available
-        const res = await storeData('username', username);
-        
-        if (res) {
-            setIsLoggedIn(true);
-        }
+      // Fetch user data only if needed
+      const users = await getAllUsers();
+  
+      // Check if username exists
+      const user = users.find((user) => user.username === username);
+  
+      if (!user || user.password !== password) {
+        Alert.alert('Error', 'Username or Password is incorrect!');
+        return;
+      }
+  
+      // Store user data and set logged in status
+      const res = await storeData('userdata', JSON.stringify(user));
+  
+      if (res) {
+          setIsLoggedIn(true);
+      }
+    
     } catch (error) {
         console.error('Error at login screen async save: ', error);
     }

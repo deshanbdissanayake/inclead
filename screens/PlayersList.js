@@ -154,6 +154,7 @@ const PlayersList = () => {
         <View style={styles.container}>
             <Header 
                 text={'Players List'} 
+                handleGoBack={handleGoBack}
                 component={
                     <MiniButton
                         bgColor={colors.bgColorSec}

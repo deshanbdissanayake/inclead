@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { colors } from '../assets/colors/colors'
 import { useNavigation } from '@react-navigation/native';
@@ -7,23 +7,22 @@ import { getAllAsyncData } from '../assets/data/async_storage';
 import LoadingScreen from './LoadingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppContext } from '../context/AppContext';
+import MiniButton from '../components/general/MiniButton';
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 
 const Header = () => {
     const navigation = useNavigation();
 
     const { setIsLoggedIn } = useAppContext();
 
-    const handleMatches = () => {
-        navigation.navigate('Match List')
-    }
-
     const [loading, setLoading] = useState(true)
-    const [username, setUsername] = useState(null);
+    const [userdata, setUserdata] = useState(null);
 
     const getData = async () => {
         try {
             let res = await getAllAsyncData()
-            setUsername(res.username)
+            let userdata = JSON.parse(res.userdata)
+            setUserdata(userdata)
         } catch (error) {
             console.error('error at home screen async get: ', error)
         } finally {
@@ -41,6 +40,17 @@ const Header = () => {
         //logout()
     },[])
 
+    const handleLogout = () => {
+        Alert.alert('Logout Confirm', 'Are you sure?',[
+            {text: 'cancel', onPress: () => null, style: 'cancel'},
+            {text: 'Logout', onPress: () => logout()}
+        ])
+    }
+
+    const handleSettings = () => {
+        navigation.navigate('Settings')
+    }
+
     if(loading){
         return <LoadingScreen/>
     }
@@ -49,13 +59,22 @@ const Header = () => {
         <View style={styles.headerWrapper}>
             <View style={styles.nameWrapper}>
                 <Text style={styles.appNameTextStyles}>inclead</Text>
-                <Text style={styles.gameNameTextStyles}>Hello {username} !!</Text>
+                <Text style={styles.gameNameTextStyles}>Hello {userdata.username} !!</Text>
             </View>
-            <TouchableOpacity onPress={handleMatches}>
-                <Image
-                    style={styles.logoStyles}
-                    source={require('../assets/images/carrom_logo.jpg')}
-                />
+            <TouchableOpacity onPress={handleSettings}>
+                {userdata.usertype === 'admin' ? (
+                    <MiniButton
+                        bgColor={colors.bgColorTer}
+                        content={<FontAwesome name="cogs" size={24} color={colors.textColorPri} />}
+                        func={handleSettings}
+                    />
+                ) : (
+                    <MiniButton
+                        bgColor={colors.bgColorTer}
+                        content={<MaterialIcons name="logout" size={24} color={colors.textColorPri} />}
+                        func={handleLogout}
+                    />
+                )}
             </TouchableOpacity>
         </View>
     )

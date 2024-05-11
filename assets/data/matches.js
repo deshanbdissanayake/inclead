@@ -19,7 +19,11 @@ const getMatchStats = async () => {
         }));
 
     const filteredMatches = activeMatchesList.filter(match => match.status === 'active')
-        .sort((a, b) => b.dateTime - a.dateTime);
+        .sort((a, b) => {
+            if (a.dateTime < b.dateTime) return 1;
+            if (a.dateTime > b.dateTime) return -1;
+            return 0;
+        });
 
     return filteredMatches;
 }

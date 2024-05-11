@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { FontAwesome5, MaterialIcons, AntDesign } from '@expo/vector-icons';
+import { MaterialIcons, AntDesign, Entypo } from '@expo/vector-icons';
 import { colors } from '../assets/colors/colors';
 import { TabBarProvider, useTabBarVisibility } from '../context/TabBarContext';
 import HomeNav from './HomeNav';
-import PlayersList from '../screens/PlayersList';
 import LoadingScreen from '../screens/LoadingScreen';
 import GameNav from './GameNav';
+import MatchNav from './MatchNav';
 
 function MyTabBar({ state, descriptors, navigation }) {
   return (
@@ -41,8 +41,8 @@ function MyTabBar({ state, descriptors, navigation }) {
             icon = <MaterialIcons name="leaderboard" size={24} />;
         } else if (route.name === 'Game Nav') {
             icon = <AntDesign name="plus" size={24} />;
-        } else if (route.name === 'Players List') {
-            icon = <FontAwesome5 name="users" size={24} />;
+        } else if (route.name === 'Match Nav') {
+            icon = <Entypo name="list" size={24} />;
         }
         return (
             <TouchableOpacity
@@ -82,8 +82,8 @@ const TabNav = () => {
           options={{ headerShown: false }} 
         />
         <Tab.Screen 
-          name="Players List" 
-          component={PlayersList}
+          name="Match Nav" 
+          component={MatchNav}
           options={{ headerShown: false}}
         />
       </Tab.Navigator>
