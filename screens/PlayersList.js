@@ -5,7 +5,7 @@ import { colors } from '../assets/colors/colors';
 import Header from '../components/general/Header';
 import { AntDesign } from '@expo/vector-icons';
 import MiniButton from '../components/general/MiniButton';
-import { getPlayers, savePlayer } from '../assets/data/players';
+import { deletePlayer, getPlayers, savePlayer } from '../assets/data/players';
 import LoadingScreen from './LoadingScreen';
 import PlayerCard from '../components/app/PlayerCard';
 import NoData from '../components/general/NoData';
@@ -77,8 +77,19 @@ const PlayersList = () => {
         ])
     }
 
-    const deleteFunc = async () => {
-        Alert.alert('Successful', 'Player Deleted Successfully!')
+    const deleteFunc = async (id) => {
+        try {
+            let res = await deletePlayer(id)
+            if(res.stt == 'success'){
+                Alert.alert('Success', res.msg)
+            }else{
+                Alert.alert('Error', res.msg)
+            }
+        } catch (error) {
+            console.error('error at playerlist delete player: ', error)
+        } finally {
+            getData();
+        }
     }
 
     const onRefresh = () => {
@@ -120,13 +131,14 @@ const PlayersList = () => {
         try {
             let res = await savePlayer(formData);
             if(res.stt == 'success'){
-                getData()
                 Alert.alert('Successful', res.msg)
             }else{
                 Alert.alert('Error', res.msg)
             }
         } catch (error) {
             console.error('error at players list submit: ', error)
+        } finally {
+            getData()
         }
     }
 

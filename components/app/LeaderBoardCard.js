@@ -25,7 +25,7 @@ const LeaderBoardCard = ({cardData, onPress}) => {
                 </View>
                 <View style={styles.valueWrapper}>
                     <Ionicons name="disc" size={24} color={colors.gold} />
-                    <Text style={styles.valueTextStyles}>{cardData.value}%</Text>
+                    <Text style={styles.valueTextStyles}>{cardData.value}</Text>
                 </View>
                 <View style={styles.placeTextWrapper}>
                     <Text style={styles.placeTextStyles}>{cardData.place}</Text>

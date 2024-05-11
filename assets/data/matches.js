@@ -1,4 +1,23 @@
+import { db } from "../../db/firestore";
+import { collection, getDocs, doc, addDoc, updateDoc } from 'firebase/firestore/lite';
+
 const getMatchStats = async () => {
+    const matchesCol = collection(db, 'matches');
+    const matchSnapshot = await getDocs(matchesCol);
+    const activeMatchesList = matchSnapshot.docs
+        .map(doc => ({
+            id: doc.id,
+            players: doc.data().players,
+            type: doc.data().type,
+            dateTime: doc.data().dateTime,
+            handledBy: doc.data().handledBy,
+            status: doc.data().status,
+        }))
+        .filter(match => match.status === 'active');
+
+    return activeMatchesList;
+
+
     let data = [
         {
             id: 1, 
@@ -111,8 +130,17 @@ const getMatchStats = async () => {
     return data;
 }
 
-const saveMatch = async () => {
-    return {stt: 'success', msg: 'Successful', data: []}
+const saveMatch = async (matchData) => {
+    try {
+        // Reference to the 'matches' collection
+        const playersCol = collection(db, 'matches');
+        // Adding a new match
+        await addDoc(playersCol, matchData);
+        return { stt: 'success', msg: 'Match added successfully!', data: [] };
+    } catch (error) {
+        console.error('Error saving match:', error);
+        return { stt: 'error', msg: 'Error saving match. Please try again later.', data: [] };
+    }
 }
 
 export { getMatchStats, saveMatch }

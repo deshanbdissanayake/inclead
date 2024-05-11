@@ -9,6 +9,8 @@ import Button from '../components/general/Button'
 import MiniButton from '../components/general/MiniButton'
 import { Entypo } from '@expo/vector-icons'
 import BottomSheet from '@gorhom/bottom-sheet';
+import LoadingScreen from './LoadingScreen'
+import { saveMatch } from '../assets/data/matches'
 
 const NewGameScoreScreen = () => {
     const navigation = useNavigation();
@@ -19,10 +21,11 @@ const NewGameScoreScreen = () => {
     const bottomSheetRef = useRef(null);
     const snapPoints = useMemo(() => [1, '25%'], []);
 
+    const [loading, setLoading] = useState(true);
     const [matchData, setMatchData] = useState({
         players: [],
         type: 'carrom',
-        dateTime: Date.now(),
+        dateTime: new Date(),
         handledBy: 'Desh',
         status: 'active'
     });
@@ -31,7 +34,7 @@ const NewGameScoreScreen = () => {
         const match = {
             players: [],
             type: 'carrom',
-            dateTime: Date.now(),
+            dateTime: new Date(),
             handledBy: 'Desh',
             status: 'active'
         };
@@ -56,6 +59,7 @@ const NewGameScoreScreen = () => {
         addPlayersToMatch(teamBlack, 'black');
     
         setMatchData(match); 
+        setLoading(false)
     };
     
 
@@ -141,17 +145,32 @@ const NewGameScoreScreen = () => {
         // Navigate to the 'New Game Score Board' after match data is updated
         if (matchData.players && matchData.players.length > 0) {
             if(matchData.players[0].match_stt){
-                navigation.navigate('New Game Score Board', { matchData });
+                setLoading(true)
+                saveMatchData()
             }
         }
     }, [matchData]);
 
+    const saveMatchData = async () => {
+        try {
+            let res = await saveMatch(matchData);
+            if(res.stt == 'success'){
+                Alert.alert('Success', res.msg)
+                navigation.navigate('New Game Score Board', { matchDataSent: JSON.stringify(matchData) });
+            }else{
+                Alert.alert('Error', res.msg)
+            }
+        } catch (error) {
+            console.error('error at new game score screen save match data: ', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
     const handleFinishClick = () => {
         const checkRedPot = matchData.players.some((player) => player.red_pot === 1);
-        const checkGameFinishWhite = matchData.players.some((player) => player.team === 'white' && player.points >= 9);
-        const checkGameFinishBlack = matchData.players.some((player) => player.team === 'black' && player.points >= 9);
 
-        if (checkRedPot && (checkGameFinishWhite || checkGameFinishBlack)) {
+        if (checkRedPot) {
             Alert.alert('Confirm', 'Who won the game?', [
                 { text: 'Cancel', style: 'cancel', onPress: () => null },
                 { text: 'Black', onPress: () => updateWinningTeam('black') },
@@ -171,6 +190,10 @@ const NewGameScoreScreen = () => {
         bottomSheetRef.current.expand();
     }
 
+    if(loading){
+        return <LoadingScreen/>
+    }
+
     return (
         <View style={styles.container}>
             <Header 
@@ -187,43 +210,45 @@ const NewGameScoreScreen = () => {
                 contentContainerStyle={styles.contentContainer} 
                 showsVerticalScrollIndicator={false} 
             >
-                <View style={styles.teamWrapper}>
-                    <Subtitle text={'Team White'} />
-                    {matchData.players && matchData.players.length > 0 && 
-                        matchData.players.map((player, index)=> player.team == 'white' && (
-                            <View style={[styles.scoreWrapper]} key={player.id}>
-                                <View style={styles.nameWrapper}>
-                                    <Image style={styles.imageStyles} source={{uri: `data:image/png;base64,${player.image}`}} />
-                                    <Text style={styles.nameTextStyles}>{player.name}</Text>
+                <View style={styles.teamsWrapper}>
+                    <View style={styles.teamWrapper}>
+                        <Subtitle text={'Team White'} />
+                        {matchData.players && matchData.players.length > 0 && 
+                            matchData.players.map((player, index)=> player.team == 'white' && (
+                                <View style={[styles.scoreWrapper]} key={player.id}>
+                                    <View style={styles.nameWrapper}>
+                                        <Image style={styles.imageStyles} source={{uri: `data:image/png;base64,${player.image}`}} />
+                                        <Text style={styles.nameTextStyles}>{player.name}</Text>
+                                    </View>
+                                    <View style={styles.playerScoreWrapper}>
+                                        <ScoreCard type={'white'} player_id={player.id} value={player.points} setValue={changePlayerData} />
+                                        <ScoreCard type={'black'} player_id={player.id} value={player.minus_points} setValue={changePlayerData} />
+                                        <ScoreCard type={'red'} player_id={player.id} value={player.red_pot} setValue={changePlayerData} />
+                                        <ScoreCard type={'foul'} player_id={player.id} value={player.foul} setValue={changePlayerData} />
+                                    </View>
                                 </View>
-                                <View style={styles.playerScoreWrapper}>
-                                    <ScoreCard type={'white'} player_id={player.id} value={player.points} setValue={changePlayerData} />
-                                    <ScoreCard type={'black'} player_id={player.id} value={player.minus_points} setValue={changePlayerData} />
-                                    <ScoreCard type={'red'} player_id={player.id} value={player.red_pot} setValue={changePlayerData} />
-                                    <ScoreCard type={'foul'} player_id={player.id} value={player.foul} setValue={changePlayerData} />
+                            ))
+                        }
+                    </View>
+                    <View style={styles.teamWrapper}>
+                        <Subtitle text={'Team Black'} />
+                        {matchData.players && matchData.players.length > 0 && 
+                            matchData.players.map((player, index)=> player.team == 'black' && (
+                                <View style={[styles.scoreWrapper]} key={player.id}>
+                                    <View style={styles.nameWrapper}>
+                                        <Image style={styles.imageStyles} source={{uri: `data:image/png;base64,${player.image}`}} />
+                                        <Text style={styles.nameTextStyles}>{player.name}</Text>
+                                    </View>
+                                    <View style={styles.playerScoreWrapper}>
+                                        <ScoreCard type={'white'} player_id={player.id} value={player.minus_points} setValue={changePlayerData} />
+                                        <ScoreCard type={'black'} player_id={player.id} value={player.points} setValue={changePlayerData} />
+                                        <ScoreCard type={'red'} player_id={player.id} value={player.red_pot} setValue={changePlayerData} />
+                                        <ScoreCard type={'foul'} player_id={player.id} value={player.foul} setValue={changePlayerData} />
+                                    </View>
                                 </View>
-                            </View>
-                        ))
-                    }
-                </View>
-                <View style={styles.teamWrapper}>
-                    <Subtitle text={'Team Black'} />
-                    {matchData.players && matchData.players.length > 0 && 
-                        matchData.players.map((player, index)=> player.team == 'black' && (
-                            <View style={[styles.scoreWrapper]} key={player.id}>
-                                <View style={styles.nameWrapper}>
-                                    <Image style={styles.imageStyles} source={{uri: `data:image/png;base64,${player.image}`}} />
-                                    <Text style={styles.nameTextStyles}>{player.name}</Text>
-                                </View>
-                                <View style={styles.playerScoreWrapper}>
-                                    <ScoreCard type={'white'} player_id={player.id} value={player.minus_points} setValue={changePlayerData} />
-                                    <ScoreCard type={'black'} player_id={player.id} value={player.points} setValue={changePlayerData} />
-                                    <ScoreCard type={'red'} player_id={player.id} value={player.red_pot} setValue={changePlayerData} />
-                                    <ScoreCard type={'foul'} player_id={player.id} value={player.foul} setValue={changePlayerData} />
-                                </View>
-                            </View>
-                        ))
-                    }
+                            ))
+                        }
+                    </View>
                 </View>
                 <View style={styles.btnsWrapper}>
                     <Button
@@ -289,6 +314,10 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         flexGrow: 1,
+        justifyContent: 'space-between',
+    },
+    teamsWrapper: {
+
     },
     teamWrapper: {
         marginBottom: 20,

@@ -1,3 +1,4 @@
+import { Alert } from "react-native";
 import { db } from "../../db/firestore";
 import { collection, getDocs, doc, addDoc, updateDoc } from 'firebase/firestore/lite';
 
@@ -17,6 +18,12 @@ const getPlayers = async () => {
 }
 
 const savePlayer = async (sentData) => {
+
+    if(!sentData.name || !sentData.image){
+        Alert.alert('Error', 'All fields are required!')
+        return
+    }
+
     let formData = {
         name: sentData.name,
         image: sentData.image,
@@ -46,7 +53,25 @@ const savePlayer = async (sentData) => {
 
 
 const deletePlayer = async (id) => {
-    return {stt: 'success', msg: 'Deleted Successfully!', data: []}
+
+    if(!id){
+        Alert.alert('Error', 'Something went wrong!');
+        return;
+    }
+
+    try {
+        // Reference to the 'players' collection
+        const playersCol = collection(db, 'players');
+
+        // Editing an existing player
+        const playerRef = doc(playersCol, id);
+        await updateDoc(playerRef, {status: 'delete'});
+        return { stt: 'success', msg: 'Player deleted successfully!', data: [] };
+      
+    } catch (error) {
+        console.error('Error deleting player:', error);
+        return { stt: 'error', msg: 'Error deleting player. Please try again later.', data: [] };
+    }
 } 
 
 export { getPlayers, savePlayer, deletePlayer }

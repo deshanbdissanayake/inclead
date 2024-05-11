@@ -7,7 +7,6 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { getMatchStats } from '../assets/data/matches'
 import LoadingScreen from './LoadingScreen'
 import NoData from '../components/general/NoData'
-import { Feather } from '@expo/vector-icons';
 
 const Leaderboard = () => {
     const navigation = useNavigation();
@@ -54,6 +53,7 @@ const Leaderboard = () => {
                         total_points: player.points,
                         total_minus_points: player.minus_points,
                         total_red_pots: player.red_pot ? 1 : 0,
+                        total_foul: player.foul,
                     });
                 } else {
                     playersArr[existingPlayerIndex].total_matches++;
@@ -65,13 +65,14 @@ const Leaderboard = () => {
                     if (player.red_pot) {
                         playersArr[existingPlayerIndex].total_red_pots++;
                     }
+                    playersArr[existingPlayerIndex].total_foul += player.foul;
                 }
             });
         });
     
         // Calculate value and sort players
         playersArr.forEach((player) => {
-            let value = ((player.total_points - player.total_minus_points) / (player.total_matches * 11) * 100).toFixed(2);
+            let value = ((player.total_points + (player.total_red_pots * 2) - player.total_minus_points - (player.total_foul * 2)) / (player.total_matches)).toFixed(2);
             player.value = parseFloat(value) >= 0 ? value : '0';
         });
     

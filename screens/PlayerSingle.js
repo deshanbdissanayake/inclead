@@ -16,12 +16,13 @@ const PlayerSingle = () => {
   }
 
   return (
-    <ScrollView 
-      contentContainerStyle={styles.container}
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={styles.container}>
+    
       <Header text={'Player Stats'} handleGoBack={handleGoBack} />
-      <View style={styles.contentContainer}>
+      <ScrollView 
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <Image style={styles.imageStyles} source={{uri: `data:image/png;base64,${playerData.image}`}} />
         <Text style={styles.nameTextStyles}>{playerData.name}</Text>
         <View style={styles.tableStyles}>
@@ -30,8 +31,12 @@ const PlayerSingle = () => {
             <Text style={styles.dataTextStyles}>{playerData.place}</Text>
           </View>
           <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Points Percentage</Text>
-            <Text style={styles.dataTextStyles}>{playerData.value}%</Text>
+            <Text style={styles.headerTextStyles}>Avg Points Per Match</Text>
+            <Text style={styles.dataTextStyles}>{playerData.value}</Text>
+          </View>
+          <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Total Points</Text>
+            <Text style={styles.dataTextStyles}>{(playerData.total_points + (playerData.total_red_pots * 2) - playerData.total_minus_points - (playerData.total_foul * 2))}</Text>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Matches</Text>
@@ -46,7 +51,7 @@ const PlayerSingle = () => {
             <Text style={styles.dataTextStyles}>{parseInt(playerData.total_matches) - parseInt(playerData.total_wins)}</Text>
           </View>
           <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Total Points</Text>
+            <Text style={styles.headerTextStyles}>Total Plus Points</Text>
             <Text style={styles.dataTextStyles}>{playerData.total_points}</Text>
           </View>
           <View style={styles.rowStyles}>
@@ -57,9 +62,13 @@ const PlayerSingle = () => {
             <Text style={styles.headerTextStyles}>Total Red Pots</Text>
             <Text style={styles.dataTextStyles}>{playerData.total_red_pots}</Text>
           </View>
+          <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Total Fouls</Text>
+            <Text style={styles.dataTextStyles}>{playerData.total_foul}</Text>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   )
 }
 
@@ -73,7 +82,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   contentContainer: {
-    flex: 1,
+    flexGrow: 1,
     width: '100%',
     alignItems: 'center',
   },
@@ -90,8 +99,7 @@ const styles = StyleSheet.create({
     fontFamily: 'ms-semibold',
     fontSize: 16,
     color: colors.textColorPri,
-    marginTop: 20,
-    marginBottom: 30,
+    marginVertical: 15,
   },
   tableStyles: {
     borderTopWidth: 1,
@@ -103,7 +111,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomWidth: 1,
     borderBottomColor: colors.bgColorTer,
-    paddingVertical: 15,
+    paddingVertical: 12,
     paddingHorizontal: 10,
   },
   headerTextStyles: {

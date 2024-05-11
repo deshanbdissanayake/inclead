@@ -25,9 +25,9 @@ const NewGameScoreViewScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
 
-    const { matchData } = route.params;
+    const { matchDataSent } = route.params;
 
-    //console.log('matchData', matchData);
+    const matchData = JSON.parse(matchDataSent)
 
     const handleNewGame = () => {
         navigation.navigate('New Game');
