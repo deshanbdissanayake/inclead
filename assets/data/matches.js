@@ -1,27 +1,42 @@
 import { db } from "../../db/firestore";
 import { collection, getDocs, doc, addDoc, updateDoc } from 'firebase/firestore/lite';
+import { getPlayers } from "./players";
 
 const getMatchStats = async () => {
     const matchesCol = collection(db, 'matches');
     const matchSnapshot = await getDocs(matchesCol);
-    const activeMatchesList = matchSnapshot.docs
-        .map(doc => ({
-            id: doc.id,
-            players: doc.data().players,
-            type: doc.data().type,
-            dateTime: formatDate(doc.data().dateTime.toDate()),
-            handledBy: doc.data().handledBy,
-            status: doc.data().status,
-        }))
-        .filter(match => match.status === 'active')
-        .sort((a, b) => {
-            if (a.dateTime < b.dateTime) return 1;
-            if (a.dateTime > b.dateTime) return -1;
-            return 0;
-        });
+    const activeMatchesList = await Promise.all(matchSnapshot.docs
+        .map(async doc => {
+            const players = await formatPlayer(doc.data().players);
+            return {
+                id: doc.id,
+                players: players,
+                type: doc.data().type,
+                dateTime: formatDate(doc.data().dateTime.toDate()),
+                handledBy: doc.data().handledBy,
+                status: doc.data().status,
+            };
+        }));
 
-    return activeMatchesList;
+    const filteredMatches = activeMatchesList.filter(match => match.status === 'active')
+        .sort((a, b) => b.dateTime - a.dateTime);
+
+    return filteredMatches;
 }
+
+
+const formatPlayer = async (players) => {
+    const playersList = await getPlayers();
+    const playerMap = new Map(playersList.map(player => [player.id, player]));
+
+    const updatedPlayers = players.map(player => ({
+        ...player,
+        image: playerMap.get(player.id).image,
+        name: playerMap.get(player.id).name
+    }));
+    return updatedPlayers;
+}
+
 
 // Function to format date to "YYYY-MM-DD hh:mm a" format
 const formatDate = (date) => {
@@ -36,11 +51,17 @@ const formatDate = (date) => {
 }
 
 const saveMatch = async (matchData) => {
+
+    let formData = {
+        ...matchData,
+        players: matchData.players.map(({ name, image, ...rest }) => rest)
+    };
+    
     try {
         // Reference to the 'matches' collection
         const playersCol = collection(db, 'matches');
         // Adding a new match
-        await addDoc(playersCol, matchData);
+        await addDoc(playersCol, formData);
         return { stt: 'success', msg: 'Match data saved successfully!', data: [] };
     } catch (error) {
         console.error('Error saving match:', error);
@@ -48,4 +69,4 @@ const saveMatch = async (matchData) => {
     }
 }
 
-export { getMatchStats, saveMatch }
+export { getMatchStats, saveMatch, formatPlayer }

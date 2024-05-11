@@ -26,11 +26,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textStyles: {
-    fontWeight: '400',
     fontSize: 18,
     color: colors.textColorPri,
     textAlign: 'center',
     marginTop: 10,
+    fontFamily: 'ms-regular'
   },
   imageStyles: {
     width: 150,

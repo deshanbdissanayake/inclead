@@ -1,4 +1,4 @@
-import { FlatList, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { colors } from '../assets/colors/colors'
 import Subtitle from '../components/general/Subtitle'
@@ -118,7 +118,18 @@ const Leaderboard = () => {
                         }
                     />
                 ) : (
-                    <NoData text={'No Data Yet!'} />
+                    <ScrollView 
+                        contentContainerStyle={styles.noDataWrapper}
+                        showsVerticalScrollIndicator={false}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}   
+                            />
+                        }
+                    >
+                        <NoData text={'No Data Yet!'} />
+                    </ScrollView>
                 )}
             </View>
         </View>
@@ -134,6 +145,9 @@ const styles = StyleSheet.create({
         padding: 15,
     },
     leaderboardWrapper: {
+        flex: 1,
+    },
+    noDataWrapper: {
         flex: 1,
     },
 })

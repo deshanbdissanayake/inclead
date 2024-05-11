@@ -1,4 +1,4 @@
-import { FlatList, Image, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import Header from '../components/general/Header'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -112,7 +112,18 @@ const MatchList = () => {
                     }
                 />
             ) : (
-                <NoData text={'No matches yet!'} />
+                <ScrollView 
+                    contentContainerStyle={styles.noDataWrapper}
+                    showsVerticalScrollIndicator={false}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}   
+                        />
+                    }
+                >
+                    <NoData text={'No matches yet!'} />
+                </ScrollView>
             )}
         </View>
     )
@@ -187,5 +198,8 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
+    noDataWrapper: {
+        flex: 1,
+    },
 })

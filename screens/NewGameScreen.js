@@ -106,8 +106,7 @@ const NewGameScreen = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.contentContainer}>
+    <View style={styles.container}>
         <Header 
           text={'New Game'} 
           component={
@@ -117,125 +116,131 @@ const NewGameScreen = () => {
             />
           } 
         />
-        <View style={styles.sectionWrapper}>
-          <Subtitle text={'Number of Players'} />
-          <View style={styles.btnWrapper}>
-            {[2, 4].map((num) => (
-              <TouchableOpacity
-                key={num}
-                style={[
-                  styles.numberBtnStyles,
-                  playerNum == num ? styles.selectedNumberStyles : null,
-                ]}
-                onPress={() => handlePlayerNum(num)}
-              >
-                <Text
-                  style={[
-                    styles.numberBtnTextStyles,
-                    playerNum == num ? styles.selectedNumberTextStyles : null,
-                  ]}
-                >
-                  {num}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
-        {playerNum > 0 ? (
-          <>
+        <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+          
+          <View>
             <View style={styles.sectionWrapper}>
-              <Subtitle text={'Select Team White'} />
+              <Subtitle text={'Number of Players'} />
               <View style={styles.btnWrapper}>
-                {players.map((player) => 
-                teamBlack && teamBlack.some(blackPlayer => blackPlayer.id === player.id) ? null : (
+                {[2, 4].map((num) => (
                   <TouchableOpacity
-                    key={player.id}
+                    key={num}
                     style={[
-                      styles.playerBtnStyles,
-                      teamWhite && teamWhite.length > 0 && teamWhite.some(whitePlayer => whitePlayer.id === player.id)
-                        ? styles.selectedPlayerStyles
-                        : null,
+                      styles.numberBtnStyles,
+                      playerNum == num ? styles.selectedNumberStyles : null,
                     ]}
-                    onPress={() => handlePlayer('white', player.id)}
+                    onPress={() => handlePlayerNum(num)}
                   >
                     <Text
                       style={[
-                        styles.playerBtnTextStyles,
-                        teamWhite && teamWhite.length > 0 && teamWhite.some(whitePlayer => whitePlayer.id === player.id)
-                          ? styles.selectedPlayerTextStyles
-                          : null,
+                        styles.numberBtnTextStyles,
+                        playerNum == num ? styles.selectedNumberTextStyles : null,
                       ]}
                     >
-                      {player.name}
+                      {num}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
-            <View style={styles.sectionWrapper}>
-              <Subtitle text={'Select Team Black'} />
-              <View style={styles.btnWrapper}>
-                {players.map((player) => 
-                  teamWhite && teamWhite.some(whitePlayer => whitePlayer.id === player.id) ? null : (
-                    <TouchableOpacity
-                      key={player.id}
-                      style={[
-                        styles.playerBtnStyles,
-                        teamBlack && teamBlack.length > 0 && teamBlack.some(blackPlayer => blackPlayer.id === player.id)
-                          ? styles.selectedPlayerStyles
-                          : null,
-                      ]}
-                      onPress={() => handlePlayer('black', player.id)}
-                    >
-                      <Text
+
+            {playerNum > 0 ? (
+              <>
+                <View style={styles.sectionWrapper}>
+                  <Subtitle text={'Select Team White'} />
+                  <View style={styles.btnWrapper}>
+                    {players.map((player) => 
+                    teamBlack && teamBlack.some(blackPlayer => blackPlayer.id === player.id) ? null : (
+                      <TouchableOpacity
+                        key={player.id}
                         style={[
-                          styles.playerBtnTextStyles,
-                          teamBlack && teamBlack.length > 0 && teamBlack.some(blackPlayer => blackPlayer.id === player.id)
-                            ? styles.selectedPlayerTextStyles
+                          styles.playerBtnStyles,
+                          teamWhite && teamWhite.length > 0 && teamWhite.some(whitePlayer => whitePlayer.id === player.id)
+                            ? styles.selectedPlayerStyles
                             : null,
                         ]}
+                        onPress={() => handlePlayer('white', player.id)}
                       >
-                        {player.name}
-                      </Text>
-                    </TouchableOpacity>
-                  )
-                )}
-              </View>
-            </View>
-          </>
-        ) : (
-          <NoData text={'No Players Added Yet!'} />
-        )}
-
-      </View>
-      <View style={styles.sectionWrapper}>
-        <Button
-          bgColor={colors.bgColor}
-          content={<Text style={{color: colors.textColorPri, fontFamily: 'ms-regular'}}>Reset</Text>}
-          bdr={colors.textColorPri}
-          func={handleResetClick}
-        />
-        <Button
-          bgColor={colors.bgColorSec}
-          content={<Text style={{color: colors.textColorSec, fontFamily: 'ms-regular'}}>Next</Text>}
-          bdr={colors.textColorPri}
-          func={handleNextClick}
-        />
-      </View>
-      <BottomSheet 
-          ref={bottomSheetRef} 
-          index={0} 
-          snapPoints={snapPoints} 
-          backgroundStyle={{backgroundColor: colors.bgColorSec}}
-          handleIndicatorStyle={{backgroundColor: colors.textColorSec}}
-      >
-          <View style={styles.bottomSheetContainer}>
-            <Text style={styles.instructionsTextStyles}>* Press once to select team members. Press again to un-select team members.</Text>
-            <Text style={styles.instructionsTextStyles}>** If the number of players is 2, then Team White and Team Black must each have one player. If the number of players is 4, then each team must have two players.</Text>
+                        <Text
+                          style={[
+                            styles.playerBtnTextStyles,
+                            teamWhite && teamWhite.length > 0 && teamWhite.some(whitePlayer => whitePlayer.id === player.id)
+                              ? styles.selectedPlayerTextStyles
+                              : null,
+                          ]}
+                        >
+                          {player.name}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+                <View style={styles.sectionWrapper}>
+                  <Subtitle text={'Select Team Black'} />
+                  <View style={styles.btnWrapper}>
+                    {players.map((player) => 
+                      teamWhite && teamWhite.some(whitePlayer => whitePlayer.id === player.id) ? null : (
+                        <TouchableOpacity
+                          key={player.id}
+                          style={[
+                            styles.playerBtnStyles,
+                            teamBlack && teamBlack.length > 0 && teamBlack.some(blackPlayer => blackPlayer.id === player.id)
+                              ? styles.selectedPlayerStyles
+                              : null,
+                          ]}
+                          onPress={() => handlePlayer('black', player.id)}
+                        >
+                          <Text
+                            style={[
+                              styles.playerBtnTextStyles,
+                              teamBlack && teamBlack.length > 0 && teamBlack.some(blackPlayer => blackPlayer.id === player.id)
+                                ? styles.selectedPlayerTextStyles
+                                : null,
+                            ]}
+                          >
+                            {player.name}
+                          </Text>
+                        </TouchableOpacity>
+                      )
+                    )}
+                  </View>
+                </View>
+              </>
+            ) : (
+              <NoData text={'Select Number of Players Players'} showImg={false} />
+            )}
           </View>
-      </BottomSheet>
-    </ScrollView>
+
+          <View>
+            <Button
+              bgColor={colors.bgColor}
+              content={<Text style={{color: colors.textColorPri, fontFamily: 'ms-regular'}}>Reset</Text>}
+              bdr={colors.textColorPri}
+              func={handleResetClick}
+            />
+            <Button
+              bgColor={colors.bgColorSec}
+              content={<Text style={{color: colors.textColorSec, fontFamily: 'ms-regular'}}>Next</Text>}
+              bdr={colors.textColorPri}
+              func={handleNextClick}
+            />
+          </View>
+
+        </ScrollView>
+        <BottomSheet 
+            ref={bottomSheetRef} 
+            index={0} 
+            snapPoints={snapPoints} 
+            backgroundStyle={{backgroundColor: colors.bgColorSec}}
+            handleIndicatorStyle={{backgroundColor: colors.textColorSec}}
+        >
+            <View style={styles.bottomSheetContainer}>
+              <Text style={styles.instructionsTextStyles}>* Press once to select team members. Press again to un-select team members.</Text>
+              <Text style={styles.instructionsTextStyles}>** If the number of players is 2, then Team White and Team Black must each have one player. If the number of players is 4, then each team must have two players.</Text>
+            </View>
+        </BottomSheet>
+    </View>
+    
   )
 }
 
@@ -247,6 +252,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.bgColor,
     paddingHorizontal: 15,
     paddingVertical: 15,
+    justifyContent: 'space-between',
+  },
+  contentContainer: {
+    flexGrow: 1,
     justifyContent: 'space-between',
   },
   bottomSheetContainer: {
