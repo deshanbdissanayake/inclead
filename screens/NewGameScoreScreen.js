@@ -19,7 +19,7 @@ const NewGameScoreScreen = () => {
     const { teamWhite, teamBlack } = route.params;
 
     const bottomSheetRef = useRef(null);
-    const snapPoints = useMemo(() => [1, '25%'], []);
+    const snapPoints = useMemo(() => [1, '30%'], []);
 
     const [loading, setLoading] = useState(true);
     const [matchData, setMatchData] = useState({
@@ -130,6 +130,8 @@ const NewGameScoreScreen = () => {
     }
 
     const updateWinningTeam = (type) => {
+        setLoading(true);
+
         const updatedPlayers = matchData.players.map((player) => ({
             ...player,
             match_stt: player.team == type ? 'won' : 'lost'
@@ -139,24 +141,18 @@ const NewGameScoreScreen = () => {
             ...prevData,
             players: updatedPlayers
         }));
+
+        let formData = {...matchData, players: updatedPlayers};
+
+        saveMatchData(formData);
     };
 
-    useEffect(() => {
-        // Navigate to the 'New Game Score Board' after match data is updated
-        if (matchData.players && matchData.players.length > 0) {
-            if(matchData.players[0].match_stt){
-                setLoading(true)
-                saveMatchData()
-            }
-        }
-    }, [matchData]);
-
-    const saveMatchData = async () => {
+    const saveMatchData = async (formData) => {
         try {
-            let res = await saveMatch(matchData);
+            let res = await saveMatch(formData);
             if(res.stt == 'success'){
                 Alert.alert('Success', res.msg)
-                navigation.navigate('New Game Score Board', { matchDataSent: JSON.stringify(matchData) });
+                navigation.navigate('New Game Score Board', { matchDataSent: JSON.stringify(formData) });
             }else{
                 Alert.alert('Error', res.msg)
             }
@@ -282,8 +278,9 @@ const NewGameScoreScreen = () => {
                         </View>
                     </Text>
 
-                    <Text style={styles.instructionsTextStyles}>** If your own carromman is pocketed 1 point. If red is pocketed 2 points.</Text>
-                    <Text style={styles.instructionsTextStyles}>*** If your opponents carromman is pocketed -1 points. Foul -2 points.</Text>
+                    <Text style={styles.instructionsTextStyles}>* If your own carromman is pocketed 1 point. If red is pocketed 2 points.</Text>
+                    <Text style={styles.instructionsTextStyles}>** If your opponents carromman is pocketed -1 points. Foul -2 points.</Text>
+                    <Text style={styles.instructionsTextStyles}>*** If your team wins 3 points.</Text>
                 </View>
             </BottomSheet>
         </View>

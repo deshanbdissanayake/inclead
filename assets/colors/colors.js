@@ -12,7 +12,7 @@ const colorsLight = {
     gray : '#d6d6d6', 
     disabled: '#f2f2f2',
 
-    border : '#474747',
+    border : '#ccc',
 
     primary : '#ff1463', //red
     primaryLight : '#fff0f5', //light red
@@ -71,7 +71,7 @@ const colorsDark = {
   gray : '#d6d6d6', 
   disabled: '#f2f2f2',
 
-  border : '#fff7fa',
+  border : '#ccc',
 
   primary : '#E0115F', //pink
   primaryLight : '#f7faff', //light blue

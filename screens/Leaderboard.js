@@ -42,14 +42,13 @@ const Leaderboard = () => {
         data.forEach((match) => {
             match.players.forEach((player) => {
                 let existingPlayerIndex = playersArr.findIndex((p) => p.id === player.id);
-    
                 if (existingPlayerIndex === -1) {
                     playersArr.push({
                         id: player.id,
                         name: player.name,
                         image: player.image,
                         total_matches: 1,
-                        total_wins: match.status === 'won' ? 1 : 0,
+                        total_wins: player.match_stt == 'won' ? 1 : 0,
                         total_points: player.points,
                         total_minus_points: player.minus_points,
                         total_red_pots: player.red_pot ? 1 : 0,
@@ -57,7 +56,7 @@ const Leaderboard = () => {
                     });
                 } else {
                     playersArr[existingPlayerIndex].total_matches++;
-                    if (match.status === 'won') {
+                    if (player.match_stt == 'won') {
                         playersArr[existingPlayerIndex].total_wins++;
                     }
                     playersArr[existingPlayerIndex].total_points += player.points;
@@ -72,7 +71,7 @@ const Leaderboard = () => {
     
         // Calculate value and sort players
         playersArr.forEach((player) => {
-            let value = ((player.total_points + (player.total_red_pots * 2) - player.total_minus_points - (player.total_foul * 2)) / (player.total_matches)).toFixed(2);
+            let value = ((player.total_points + (player.total_red_pots * 2) + (player.total_wins * 3) - player.total_minus_points - (player.total_foul * 2)) / (player.total_matches)).toFixed(2);
             player.value = parseFloat(value) >= 0 ? value : '0';
         });
     

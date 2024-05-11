@@ -1,20 +1,28 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { colors } from '../assets/colors/colors'
 import { useNavigation } from '@react-navigation/native';
 import Leaderboard from './Leaderboard';
 
 const Header = () => {
+    const navigation = useNavigation();
+
+    const handleMatches = () => {
+        navigation.navigate('Match List')
+    }
+
     return (
         <View style={styles.headerWrapper}>
             <View style={styles.nameWrapper}>
                 <Text style={styles.appNameTextStyles}>inclead</Text>
                 <Text style={styles.gameNameTextStyles}>carrom</Text>
             </View>
-            <Image
-                style={styles.logoStyles}
-                source={require('../assets/images/carrom_logo.jpg')}
-            />
+            <TouchableOpacity onPress={handleMatches}>
+                <Image
+                    style={styles.logoStyles}
+                    source={require('../assets/images/carrom_logo.jpg')}
+                />
+            </TouchableOpacity>
         </View>
     )
 }

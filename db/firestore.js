@@ -6,7 +6,7 @@ import { getFirestore } from 'firebase/firestore/lite';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDpOFj3lzDOnrA8LHBjvcOtVaEIGkSLF1g",
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
   authDomain: "inclead-2bff6.firebaseapp.com",
   projectId: "inclead-2bff6",
   storageBucket: "inclead-2bff6.appspot.com",
@@ -16,7 +16,6 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
 export { db}

@@ -4,18 +4,24 @@ import { useNavigation, useRoute } from '@react-navigation/native'
 import { colors } from '../assets/colors/colors';
 import Header from '../components/general/Header';
 import Button from '../components/general/Button';
+import { AntDesign } from '@expo/vector-icons';
 
 const PlayerRow = ({ player }) => {
-    console.log('hi')
-    console.log('player', player)
     return (
         <View style={styles.rowStyles}>
             <View style={styles.tableBodyStyles}>
-                <Image style={styles.playerImageStyles} source={{uri: `data:image/png;base64,${player.image}`}} />
+                <View>
+                    <Image style={styles.playerImageStyles} source={{uri: `data:image/png;base64,${player.image}`}} />
+                    {player.match_stt === 'won' && (
+                        <View style={styles.trophyStyles}>
+                            <AntDesign name="Trophy" size={14} color={colors.gold} />
+                        </View>
+                    )}
+                </View>
                 <Text style={styles.tableBodyTextStyles}>{player.name}</Text>
             </View>
             <Text style={styles.tableBodyTextStyles}>
-                {(parseInt(player.points) + (parseInt(player.red_pot) * 2)) - (parseInt(player.minus_points) + (parseInt(player.foul) * 2))}
+                {(parseInt(player.points) + (parseInt(player.red_pot) * 2)) + ((player.match_stt == 'won' ? 1 : 0) * 3) - (parseInt(player.minus_points) + (parseInt(player.foul) * 2))}
             </Text>
         </View>
     );
@@ -36,22 +42,6 @@ const NewGameScoreViewScreen = () => {
     const handleLeaderboard = () => {
         navigation.navigate('Home')
     }
-
-    useEffect(() => {
-        const backHandler = BackHandler.addEventListener(
-            'hardwareBackPress',
-            handleBackPress
-        );
-
-        return () => {
-            backHandler.remove();
-        };
-    }, []);
-
-    const handleBackPress = () => {
-        Alert.alert('Alert', 'You cannot go back to scoring! Start a new game!')
-        return true;
-    };
 
     return (
         <View style={styles.container}>
@@ -123,7 +113,18 @@ const styles = StyleSheet.create({
     },
     tableBodyTextStyles: {
         fontSize: 16,
-        fontFamily: 'ms-regular',
+        fontFamily: 'ms-light',
         marginRight: 10,
+        marginLeft: 10,
     },
+    trophyStyles: {
+        position: 'absolute',
+        padding: 5,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: colors.bgColorSec,
+        bottom: 0,
+        right: 0,
+    }
 })

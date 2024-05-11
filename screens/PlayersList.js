@@ -18,6 +18,7 @@ const PlayersList = () => {
     const navigation = useNavigation();
 
     const [refreshing, setRefreshing] = useState(true);
+    const [btnLoading, setBtnLoading] = useState(false);
     const [loading, setLoading] = useState(true);
     const [players, setPlayers] = useState(null);
 
@@ -44,8 +45,6 @@ const PlayersList = () => {
         } finally {
             setRefreshing(false);
             setLoading(false);
-            bottomSheetRef.current?.close()
-            resetFunc()
         }
     }
 
@@ -81,15 +80,16 @@ const PlayersList = () => {
         try {
             let res = await deletePlayer(id)
             if(res.stt == 'success'){
+                bottomSheetRef.current?.close()
+                resetFunc()
+                getData();
                 Alert.alert('Success', res.msg)
             }else{
                 Alert.alert('Error', res.msg)
             }
         } catch (error) {
             console.error('error at playerlist delete player: ', error)
-        } finally {
-            getData();
-        }
+        } 
     }
 
     const onRefresh = () => {
@@ -128,9 +128,13 @@ const PlayersList = () => {
     }
 
     const handleSubmitClick = async () => {
+        setBtnLoading(true);
         try {
             let res = await savePlayer(formData);
             if(res.stt == 'success'){
+                bottomSheetRef.current?.close()
+                resetFunc()
+                getData()
                 Alert.alert('Successful', res.msg)
             }else{
                 Alert.alert('Error', res.msg)
@@ -138,7 +142,7 @@ const PlayersList = () => {
         } catch (error) {
             console.error('error at players list submit: ', error)
         } finally {
-            getData()
+            setBtnLoading(false)
         }
     }
 
@@ -225,6 +229,8 @@ const PlayersList = () => {
                                 bdr={colors.bgColorSec}
                                 content={<Text style={{color: colors.textColorSec, fontFamily: 'ms-regular'}}>{!formData.id ? 'Add' : 'Edit'}</Text>}
                                 func={handleSubmitClick}
+                                loading={btnLoading}
+                                loaderIconColor={colors.textColorSec}
                             />
                         </View>
                     </View>

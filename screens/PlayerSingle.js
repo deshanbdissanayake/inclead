@@ -1,24 +1,42 @@
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import Header from '../components/general/Header'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { colors } from '../assets/colors/colors'
+import MiniButton from '../components/general/MiniButton'
+import { Entypo } from '@expo/vector-icons'
+import BottomSheet from '@gorhom/bottom-sheet';
 
 const PlayerSingle = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
-  const { playerData } = route.params;
+  const bottomSheetRef = useRef(null);
+  const snapPoints = useMemo(() => [1, '30%'], []);
 
+  const { playerData } = route.params;
 
   const handleGoBack = () => {
     navigation.goBack();
   }
 
+  const handleInstructions = () => {
+    bottomSheetRef.current.expand();
+  }
+
   return (
     <View style={styles.container}>
     
-      <Header text={'Player Stats'} handleGoBack={handleGoBack} />
+      <Header 
+        text={'Player Stats'} 
+        handleGoBack={handleGoBack} 
+        component={
+          <MiniButton
+              func={handleInstructions}
+              content={<Entypo name="info-with-circle" size={24} color={colors.textColorPri} />}
+          />
+        }
+      />
       <ScrollView 
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
@@ -36,7 +54,7 @@ const PlayerSingle = () => {
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Points</Text>
-            <Text style={styles.dataTextStyles}>{(playerData.total_points + (playerData.total_red_pots * 2) - playerData.total_minus_points - (playerData.total_foul * 2))}</Text>
+            <Text style={styles.dataTextStyles}>{(playerData.total_points + (playerData.total_red_pots * 2) + (playerData.total_wins * 3) - playerData.total_minus_points - (playerData.total_foul * 2))}</Text>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Matches</Text>
@@ -68,6 +86,20 @@ const PlayerSingle = () => {
           </View>
         </View>
       </ScrollView>
+      <BottomSheet 
+          ref={bottomSheetRef} 
+          index={0} 
+          snapPoints={snapPoints} 
+          backgroundStyle={{backgroundColor: colors.bgColorSec}}
+          handleIndicatorStyle={{backgroundColor: colors.textColorSec}}
+      >
+          <View style={styles.bottomSheetContainer}>
+              <Text style={styles.bottomSheetTitleTextStyles}>How Total Points are Calculated</Text>
+              <Text style={styles.instructionsTextStyles}>* If your own carromman is pocketed 1 point. If red is pocketed 2 points.</Text>
+              <Text style={styles.instructionsTextStyles}>** If your opponents carromman is pocketed -1 points. Foul -2 points.</Text>
+              <Text style={styles.instructionsTextStyles}>*** If your team wins 3 points.</Text>
+          </View>
+      </BottomSheet>
     </View>
   )
 }
@@ -123,5 +155,24 @@ const styles = StyleSheet.create({
     fontFamily: 'ms-semibold',
     fontSize: 14,
     color: colors.textColorPri,
+  },
+  bottomSheetContainer: {
+    flex: 1,
+    backgroundColor: colors.bgColor,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  bottomSheetTitleTextStyles: {
+    fontSize: 14,
+    fontFamily: 'ms-semibold',
+    color: colors.textColorPri,
+    marginBottom: 10,
+  },
+  instructionsTextStyles: {
+      fontSize: 12,
+      fontFamily: 'ms-regular',
+      color: colors.textColorPri,
+      textAlign: 'justify',
+      marginBottom: 10,
   },
 })
