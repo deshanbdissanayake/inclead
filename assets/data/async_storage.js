@@ -18,4 +18,16 @@ const getAllAsyncData = async () => {
     }
 };
 
-export { getAllAsyncData }
+const storeData = async (key, value) => {
+    let res = false;
+    try {
+        await AsyncStorage.setItem(key, value);
+        res = true;
+    } catch (error) {
+        console.error('Error occurred while saving in AsyncStorage data: ', error); 
+    } finally {
+        return res;
+    }
+};
+
+export { getAllAsyncData, storeData }

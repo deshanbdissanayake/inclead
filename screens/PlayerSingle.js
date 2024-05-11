@@ -45,14 +45,56 @@ const PlayerSingle = () => {
         <Text style={styles.nameTextStyles}>{playerData.name}</Text>
         <View style={styles.tableStyles}>
           <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Ranking</Text>
-            <Text style={styles.dataTextStyles}>{playerData.place}</Text>
+            <Text style={styles.headerTextStyles}>Total Plus Points</Text>
+            <View style={styles.dataTextWrapper}>
+              <Text style={styles.dataTextStyles}>{playerData.total_points}</Text>
+              <Text style={styles.dataTextStyles}>x</Text>
+              <Text style={styles.dataTextStyles}>1</Text>
+              <Text style={styles.dataTextStyles}>=</Text>
+              <Text style={styles.dataTextStyles}>{playerData.total_points * 1}</Text>
+            </View>
           </View>
           <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Avg Points Per Match</Text>
-            <Text style={styles.dataTextStyles}>{playerData.value}</Text>
+            <Text style={styles.headerTextStyles}>Total Red Pots</Text>
+            <View style={styles.dataTextWrapper}>
+              <Text style={styles.dataTextStyles}>{playerData.total_red_pots}</Text>
+              <Text style={styles.dataTextStyles}>x</Text>
+              <Text style={styles.dataTextStyles}>2</Text>
+              <Text style={styles.dataTextStyles}>=</Text>
+              <Text style={styles.dataTextStyles}>{playerData.total_red_pots * 2}</Text>
+            </View>
           </View>
           <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Total Wins</Text>
+            <View style={styles.dataTextWrapper}>
+              <Text style={styles.dataTextStyles}>{playerData.total_wins}</Text>
+              <Text style={styles.dataTextStyles}>x</Text>
+              <Text style={styles.dataTextStyles}>3</Text>
+              <Text style={styles.dataTextStyles}>=</Text>
+              <Text style={styles.dataTextStyles}>{playerData.total_wins * 3}</Text>
+            </View>
+          </View>
+          <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Total Minus Points</Text>
+            <View style={styles.dataTextWrapper}>
+              <Text style={styles.dataTextStyles}>{playerData.total_minus_points}</Text>
+              <Text style={styles.dataTextStyles}>x</Text>
+              <Text style={styles.dataTextStyles}>-1</Text>
+              <Text style={styles.dataTextStyles}>=</Text>
+              <Text style={styles.dataTextStyles}>{playerData.total_minus_points * -1}</Text>
+            </View>
+          </View>
+          <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Total Fouls</Text>
+            <View style={styles.dataTextWrapper}>
+              <Text style={styles.dataTextStyles}>{playerData.total_foul}</Text>
+              <Text style={styles.dataTextStyles}>x</Text>
+              <Text style={styles.dataTextStyles}>-2</Text>
+              <Text style={styles.dataTextStyles}>=</Text>
+              <Text style={styles.dataTextStyles}>{playerData.total_foul * -2}</Text>
+            </View>
+          </View>
+          <View style={[styles.rowStyles, {borderTopWidth: 2}]}>
             <Text style={styles.headerTextStyles}>Total Points</Text>
             <Text style={styles.dataTextStyles}>{(playerData.total_points + (playerData.total_red_pots * 2) + (playerData.total_wins * 3) - playerData.total_minus_points - (playerData.total_foul * 2))}</Text>
           </View>
@@ -61,28 +103,12 @@ const PlayerSingle = () => {
             <Text style={styles.dataTextStyles}>{playerData.total_matches}</Text>
           </View>
           <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Total Wins</Text>
-            <Text style={styles.dataTextStyles}>{playerData.total_wins}</Text>
+            <Text style={styles.headerTextStyles}>Avg Points Per Match</Text>
+            <Text style={styles.dataTextStyles}>{playerData.value}</Text>
           </View>
-          <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Total Loses</Text>
-            <Text style={styles.dataTextStyles}>{parseInt(playerData.total_matches) - parseInt(playerData.total_wins)}</Text>
-          </View>
-          <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Total Plus Points</Text>
-            <Text style={styles.dataTextStyles}>{playerData.total_points}</Text>
-          </View>
-          <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Total Minus Points</Text>
-            <Text style={styles.dataTextStyles}>-{playerData.total_minus_points}</Text>
-          </View>
-          <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Total Red Pots</Text>
-            <Text style={styles.dataTextStyles}>{playerData.total_red_pots}</Text>
-          </View>
-          <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Total Fouls</Text>
-            <Text style={styles.dataTextStyles}>{playerData.total_foul}</Text>
+          <View style={[styles.rowStyles, styles.bgWrapper]}>
+            <Text style={styles.headerTextStyles}>Ranking</Text>
+            <Text style={styles.dataTextStyles}>{playerData.place}</Text>
           </View>
         </View>
       </ScrollView>
@@ -143,7 +169,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     borderBottomWidth: 1,
     borderBottomColor: colors.bgColorTer,
-    paddingVertical: 12,
+    paddingVertical: 13,
     paddingHorizontal: 10,
   },
   headerTextStyles: {
@@ -174,5 +200,14 @@ const styles = StyleSheet.create({
       color: colors.textColorPri,
       textAlign: 'justify',
       marginBottom: 10,
+  },
+  bgWrapper: {
+    backgroundColor: colors.bgBronze,
+  },
+  dataTextWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: 80,
   },
 })

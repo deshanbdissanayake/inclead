@@ -2,7 +2,7 @@ import { StyleSheet, TextInput, View, Pressable } from "react-native";
 import React, { useRef } from "react";
 import { colors } from "../../assets/colors/colors";
 
-const Input = ({keyboardType, value, onChangeText, placeholder, secureTextEntry, icon, editable, multiline, textArea, maxLength, disabled, borderColor = colors.border, capitalize='sentences'}) => {
+const Input = ({keyboardType, value, onChangeText, placeholder, secureTextEntry, icon, editable, multiline, textArea, maxLength, disabled, borderColor = colors.border, capitalize='sentences', textCenter = false}) => {
     const inputRef = useRef(null);
 
     const handleInputWrapperClick = () => {
@@ -31,7 +31,8 @@ const Input = ({keyboardType, value, onChangeText, placeholder, secureTextEntry,
                 secureTextEntry={secureTextEntry}
                 style={[
                     styles.inputTextStyles, 
-                    disabled && { color: colors.textColorPri } 
+                    disabled && { color: colors.textColorPri } ,
+                    textCenter ? { textAlign: 'center' } : { marginLeft: 10 }
                 ]}
                 editable={editable}
                 multiline={multiline}
@@ -59,7 +60,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontFamily: 'ms-regular',
         color: colors.textColorPri,
-        marginLeft: 10,
         width: '100%',
     },
 });

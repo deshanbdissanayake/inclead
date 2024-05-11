@@ -11,6 +11,7 @@ import { Entypo } from '@expo/vector-icons'
 import BottomSheet from '@gorhom/bottom-sheet';
 import LoadingScreen from './LoadingScreen'
 import { saveMatch } from '../assets/data/matches'
+import { getAllAsyncData } from '../assets/data/async_storage'
 
 const NewGameScoreScreen = () => {
     const navigation = useNavigation();
@@ -22,11 +23,13 @@ const NewGameScoreScreen = () => {
     const snapPoints = useMemo(() => [1, '30%'], []);
 
     const [loading, setLoading] = useState(true);
+    const [username, setUsername] = useState(null)
+
     const [matchData, setMatchData] = useState({
         players: [],
         type: 'carrom',
         dateTime: new Date(),
-        handledBy: 'Desh',
+        handledBy: username,
         status: 'active'
     });
 
@@ -35,7 +38,7 @@ const NewGameScoreScreen = () => {
             players: [],
             type: 'carrom',
             dateTime: new Date(),
-            handledBy: 'Desh',
+            handledBy: username,
             status: 'active'
         };
     
@@ -61,11 +64,23 @@ const NewGameScoreScreen = () => {
         setMatchData(match); 
         setLoading(false)
     };
-    
+
+    const getUsername = async () => {
+        try {
+            let res = await getAllAsyncData()
+            setUsername(res.username);
+        } catch (error) {
+            console.error('error at new game score screen async get: ', error)
+        }
+    }
+
+    useEffect(()=>{
+        getUsername()
+    },[])
 
     useEffect(()=>{
         setMatchDataFunc()
-    },[])
+    },[username])
 
     const changePlayerData = (newValue, player_id, type) => {
         let playerIndex = matchData.players.findIndex((e) => e.id === player_id);
