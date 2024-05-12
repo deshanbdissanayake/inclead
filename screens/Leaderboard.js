@@ -19,9 +19,7 @@ const Leaderboard = () => {
     const getData = async () => {
         try {
             let data = await getMatchStats();
-            if(data && data.length > 0){
-                await getLeaderboard(data);
-            }
+            await getLeaderboard(data);
         } catch (error) {
             console.log('error at leaderboard.js: ', error)
         } finally {

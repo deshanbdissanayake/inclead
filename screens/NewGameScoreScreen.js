@@ -27,19 +27,11 @@ const NewGameScoreScreen = () => {
 
     const [matchData, setMatchData] = useState({
         players: [],
-        type: 'carrom',
-        dateTime: new Date(),
-        handledBy: username,
-        status: 'active'
     });
 
     const setMatchDataFunc = () => {
         const match = {
             players: [],
-            type: 'carrom',
-            dateTime: new Date(),
-            handledBy: username,
-            status: 'active'
         };
     
         const addPlayersToMatch = (team, teamName) => {
@@ -64,19 +56,6 @@ const NewGameScoreScreen = () => {
         setMatchData(match); 
         setLoading(false)
     };
-
-    const getUsername = async () => {
-        try {
-            let res = await getAllAsyncData()
-            setUsername(res.username);
-        } catch (error) {
-            console.error('error at new game score screen async get: ', error)
-        }
-    }
-
-    useEffect(()=>{
-        getUsername()
-    },[])
 
     useEffect(()=>{
         setMatchDataFunc()

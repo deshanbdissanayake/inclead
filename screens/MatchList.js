@@ -11,7 +11,7 @@ import { AntDesign } from '@expo/vector-icons'
 const MatchCard = ({matchData, handleMatchCardClick}) => {
     return (
         <TouchableOpacity style={styles.cardWrapper} onPress={() => handleMatchCardClick(matchData)}>
-            <Text style={styles.cardDateTimeTextStyles}>{matchData.dateTime.toString()}</Text>
+            <Text style={styles.cardDateTimeTextStyles}>{matchData.createdAt.toString()}</Text>
             <View style={styles.cardPlayerDataWrapper}>
                 <View style={styles.cardItemWrapper}>
                     <Text style={styles.cardTitleTextStyles}>White</Text>
@@ -65,9 +65,7 @@ const MatchList = () => {
     const getData = async () => {
         try {
             let res = await getMatchStats();
-            if(res && res.length > 0){
-                setMatches(res)
-            }
+            setMatches(res)
         } catch (error) {
             console.error('error at getting matches match list: ', error)
         } finally {

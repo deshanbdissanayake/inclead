@@ -1,4 +1,4 @@
-import { Alert, Image, StyleSheet, Text, View } from 'react-native'
+import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Input from '../components/general/Input'
 import Button from '../components/general/Button'
@@ -7,6 +7,7 @@ import { getAllAsyncData, storeData } from '../assets/data/async_storage'
 import { useAppContext } from '../context/AppContext'
 import LoadingScreen from './LoadingScreen'
 import { getAllUsers, saveUser } from '../assets/data/users'
+import { Feather } from '@expo/vector-icons'
 
 const LoginScreen = () => {
   const { setIsLoggedIn } = useAppContext();
@@ -14,6 +15,7 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
+  const [hidePw, setHidePw] = useState(true)
 
   const handleSubmit = async () => {
     try {
@@ -43,15 +45,19 @@ const LoginScreen = () => {
   const getData = async () => {
     try {
       let res = await getAllAsyncData();
-      if(res && res.username){
-        setIsLoggedIn(true);
+      
+      if(res && res.userdata){
+        let userdata = JSON.parse(res.userdata);
+        if(userdata.username){
+          setIsLoggedIn(true);
+        }
       }
     } catch (error) {
-      console.error('error at login screen async get: ', error)
+      console.error('Error at login screen async get: ', error);
     } finally {
       setLoading(false);
     }
-  }
+  }  
 
   useEffect(()=>{
     getData()
@@ -62,40 +68,56 @@ const LoginScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.welcomeWrapper}>
-        <Text style={styles.welcomeTextStyles}>Welcome</Text>
-        <Text style={styles.welcomeSubTextStyles}>to INCLEAD</Text>
-        <Text style={styles.welcomeDescTextStyles}>Introps Carrom Leaderboard</Text>
-        <Image style={styles.welcomeImageStyles} source={require('../assets/images/carrom_logo.jpg')} />
-      </View>
-      <View style={styles.formItemWrapper}>
-        <Input
-          keyboardType={'default'}
-          placeholder={'Enter Your Name'}
-          value={username}
-          onChangeText={(text) => setUsername(text)}
-          textCenter={true}
-        />
-      </View>
-      <View style={styles.formItemWrapper}>
-        <Input
-          keyboardType={'default'}
-          placeholder={'Enter Your Password'}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          textCenter={true}
-          secureTextEntry={true}
-        />
-      </View>
-      <View style={styles.formItemWrapper}>
-        <Button
-          bgColor={colors.bgColorSec}
-          content={<Text style={styles.btnTextStyles}>Let's Go !!</Text>}
-          func={handleSubmit}
-        />
-      </View>
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}
+    >
+      <ScrollView 
+        contentContainerStyle={styles.container} 
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.welcomeWrapper}>
+          <Text style={styles.welcomeTextStyles}>Welcome</Text>
+          <Text style={styles.welcomeSubTextStyles}>to INCLEAD</Text>
+          <Text style={styles.welcomeDescTextStyles}>Introps Carrom Leaderboard</Text>
+          <Image style={styles.welcomeImageStyles} source={require('../assets/images/carrom_logo.jpg')} />
+        </View>
+        <View style={styles.formItemWrapper}>
+          <Input
+            keyboardType={'default'}
+            placeholder={'Enter Your Name'}
+            value={username}
+            onChangeText={(text) => setUsername(text)}
+            textCenter={true}
+          />
+        </View>
+        <View style={styles.formItemWrapper}>
+          <Input
+            keyboardType={'default'}
+            placeholder={'Enter Your Password'}
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            textCenter={true}
+            secureTextEntry={true}
+          />
+          {(<TouchableOpacity style={styles.pwShowStyles} onPress={() => setHidePw(prevData => (!prevData))}>
+              {hidePw ? (
+                  <Feather name="eye" size={24} color={colors.textColorPri} />
+              ) : (
+                  <Feather name="eye-off" size={24} color={colors.textColorPri} />
+              )}
+          </TouchableOpacity>)}
+        </View>
+        <View style={styles.formItemWrapper}>
+          <Button
+            bgColor={colors.bgColorSec}
+            content={<Text style={styles.btnTextStyles}>Let's Go !!</Text>}
+            func={handleSubmit}
+          />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -146,4 +168,9 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     borderRadius: 10,
   },
+  pwShowStyles: {
+    position: 'absolute',
+    bottom: 12,
+    right: 15,
+},
 })

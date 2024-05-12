@@ -1,9 +1,13 @@
-import { ScrollView, StyleSheet, Text, View, Image } from 'react-native';
-import React from 'react'
+import { ScrollView, StyleSheet, Text, View, Image, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react'
 import Header from '../components/general/Header'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { colors } from '../assets/colors/colors'
 import { AntDesign } from '@expo/vector-icons';
+import { deleteMatch } from '../assets/data/matches';
+import Button from '../components/general/Button';
+import { getAllAsyncData } from '../assets/data/async_storage';
+import LoadingScreen from './LoadingScreen';
 
 const MatchSingle = () => {
     const navigation = useNavigation();
@@ -15,9 +19,50 @@ const MatchSingle = () => {
         black: matchData.players.filter(player => player.team === 'black')
     };
 
+    const [loading, setLoading] = useState(true);
+    const [asyncUserData, setAsyncUserData] = useState(null);
+
+    const getData = async () => {
+        try {
+            let res = await getAllAsyncData();
+            let userdata = JSON.parse(res.userdata);
+            setAsyncUserData(userdata);
+        } catch (error) {
+            console.error('error at match single async get: ', error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(()=>{
+        getData()
+    },[])
+
     const handleGoBack = () => {
         navigation.goBack();
     };
+
+    const handleDeleteClick = () => {
+        Alert.alert('Confirm', 'Are you sure you want to delete this user?', [
+            {text: 'Cancel', style: 'cancel', onPress: () => null},
+            {text: 'Delete', onPress: () => deleteFunc(matchData.id)}
+        ])
+    }
+
+    const deleteFunc = async (id) => {
+        try {
+            let res = await deleteMatch(id)
+            if(res.stt == 'success'){
+                Alert.alert('Success', res.msg, [
+                    {text: 'OK', onPress: () => handleGoBack()}
+                ])
+            }else{
+                Alert.alert('Error', res.msg)
+            }
+        } catch (error) {
+            console.error('error at match single delete match: ', error)
+        } 
+    }
 
     const renderTeam = (team) => {
         return (
@@ -104,15 +149,29 @@ const MatchSingle = () => {
         );
     };
 
+    if(loading){
+        return <LoadingScreen/>
+    }
+
     return (
         <View style={styles.container}>
-            <Header text={matchData.dateTime} handleGoBack={handleGoBack} />
+            <Header text={matchData.createdAt} handleGoBack={handleGoBack} />
             <ScrollView 
                 contentContainerStyle={styles.teamsWrapper}
                 showsVerticalScrollIndicator={false}
             >
                 {renderTeam('white')}
                 {renderTeam('black')}
+
+                {asyncUserData.usertype === 'admin' && (
+                    <View style={styles.btnWrapper}>
+                        <Button
+                            bgColor={colors.danger}
+                            content={<Text style={styles.btnTextStyles}>Delete Match</Text>}
+                            func={handleDeleteClick}
+                        />
+                    </View>
+                )}
             </ScrollView>
         </View>
     );
@@ -215,5 +274,13 @@ const styles = StyleSheet.create({
     },
     totalBgWrapper: {
         backgroundColor: colors.bgBronze,
+    },
+    btnWrapper: {
+        marginTop: 15,
+    },
+    btnTextStyles: {
+        fontSize: 14,
+        fontFamily: 'ms-regular',
+        color: colors.white,
     },
 })

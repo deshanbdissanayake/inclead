@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     nameTextStyles: {
         marginLeft: 15,
         fontFamily: 'ms-regular',
+        color: colors.textColorPri,
     },
     btnWrapper: {
         flexDirection: 'row',

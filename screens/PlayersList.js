@@ -38,8 +38,8 @@ const PlayersList = () => {
 
     const getData = async () => {
         try {
-            let data = await getPlayers();
-            setPlayers(data);
+            let res = await getPlayers();
+            setPlayers(res);
         } catch (error) {
             console.error('error at players list: ', error)
         } finally {
@@ -55,6 +55,7 @@ const PlayersList = () => {
     )
 
     const handleAddPlayer = () => {
+        resetFunc()
         bottomSheetRef.current.expand();
     }
 
@@ -66,7 +67,7 @@ const PlayersList = () => {
             image: playerData.image,
             status: 'active',
         });
-        handleAddPlayer();
+        bottomSheetRef.current.expand();
     }
 
     const handleDeleteClick = (id) => {

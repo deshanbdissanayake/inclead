@@ -1,6 +1,8 @@
 import { db } from "../../db/firestore";
 import { collection, getDocs, doc, addDoc, updateDoc } from 'firebase/firestore/lite';
 import { getPlayers } from "./players";
+import { getAllAsyncData } from "./async_storage";
+import { Alert } from "react-native";
 
 const getMatchStats = async () => {
     const matchesCol = collection(db, 'matches');
@@ -12,16 +14,15 @@ const getMatchStats = async () => {
                 id: doc.id,
                 players: players,
                 type: doc.data().type,
-                dateTime: formatDate(doc.data().dateTime.toDate()),
-                handledBy: doc.data().handledBy,
+                createdAt: formatDate(doc.data().createdAt.toDate()),
                 status: doc.data().status,
             };
         }));
 
     const filteredMatches = activeMatchesList.filter(match => match.status === 'active')
         .sort((a, b) => {
-            if (a.dateTime < b.dateTime) return 1;
-            if (a.dateTime > b.dateTime) return -1;
+            if (a.createdAt < b.createdAt) return 1;
+            if (a.createdAt > b.createdAt) return -1;
             return 0;
         });
 
@@ -41,7 +42,6 @@ const formatPlayer = async (players) => {
     return updatedPlayers;
 }
 
-
 // Function to format date to "YYYY-MM-DD hh:mm a" format
 const formatDate = (date) => {
     const year = date.getFullYear();
@@ -55,17 +55,23 @@ const formatDate = (date) => {
 }
 
 const saveMatch = async (matchData) => {
-
-    let formData = {
-        ...matchData,
-        players: matchData.players.map(({ name, image, ...rest }) => rest)
-    };
-    
     try {
-        // Reference to the 'matches' collection
-        const playersCol = collection(db, 'matches');
-        // Adding a new match
-        await addDoc(playersCol, formData);
+        const res = await getAllAsyncData();
+        const userdata = JSON.parse(res.userdata);
+        const matchesCol = collection(db, 'matches');
+
+        const formData = {
+            ...matchData,
+            players: matchData.players.map(({ name, image, ...rest }) => rest),
+            modifiedBy: userdata.username,
+            modifiedAt: new Date(),
+            type: 'carrom',
+            status: 'active'
+        };
+
+        formData.createdBy = userdata.username;
+        formData.createdAt = new Date();
+        await addDoc(matchesCol, formData);
         return { stt: 'success', msg: 'Match data saved successfully!', data: [] };
     } catch (error) {
         console.error('Error saving match:', error);
@@ -73,4 +79,31 @@ const saveMatch = async (matchData) => {
     }
 }
 
-export { getMatchStats, saveMatch, formatPlayer }
+const deleteMatch = async (id) => {
+    try {
+        if(!id){
+            Alert.alert('Error', 'Something went wrong!');
+            return;
+        }
+
+        let res = await getAllAsyncData();
+        let userdata = JSON.parse(res.userdata);
+        const matchesCol = collection(db, 'matches');
+
+        const formData = {
+            modifiedBy: userdata.username,
+            modifiedAt: new Date(),
+            status: 'delete',
+        };
+
+        const matchRef = doc(matchesCol, id);
+        await updateDoc(matchRef, formData);
+        return { stt: 'success', msg: 'Match deleted successfully!', data: [] };
+      
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        return { stt: 'error', msg: 'Error deleting match. Please try again later.', data: [] };
+    }
+}
+
+export { getMatchStats, saveMatch, formatPlayer, deleteMatch }
