@@ -99,7 +99,7 @@ const MatchList = () => {
             {matches && matches.length > 0 ? (
                 <FlatList
                     data={matches}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.id.toString()}
                     renderItem={({item}) => <MatchCard matchData={item} handleMatchCardClick={handleMatchCardClick} />}
                     showsVerticalScrollIndicator={false}
                     refreshControl={

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Keyboard, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import { Keyboard, StyleSheet, StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -11,6 +11,7 @@ import { colors } from './assets/colors/colors';
 import SplashScreen from './screens/SplashScreen';
 import LoginNav from './navigation/LoginNav';
 import BottomNav from './navigation/BottomNav';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Stack = createStackNavigator();
 
@@ -42,12 +43,14 @@ const App = () => {
   }
 
   return (
-    <NavigationContainer>
-      <AppProvider>
-        <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
-        <AppContent/>
-      </AppProvider>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <AppProvider>
+          <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
+          <AppContent/>
+        </AppProvider>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 
@@ -55,7 +58,7 @@ const AppContent = () => {
   const { isLoggedIn } = useAppContext();
 
   return (
-    <SafeAreaView style={styles.container}>
+    
       <GestureHandlerRootView style={styles.container}>
           <Stack.Navigator>
             {!isLoggedIn ? (
@@ -65,7 +68,7 @@ const AppContent = () => {
             )}
           </Stack.Navigator>
       </GestureHandlerRootView>
-    </SafeAreaView>
+    
   )
 }
 
