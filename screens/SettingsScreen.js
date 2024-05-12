@@ -5,7 +5,7 @@ import Header from '../components/general/Header'
 import { useNavigation } from '@react-navigation/native'
 import { useAppContext } from '../context/AppContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { FontAwesome, FontAwesome5, FontAwesome6, MaterialIcons } from '@expo/vector-icons'
+import { FontAwesome5, FontAwesome6, MaterialIcons } from '@expo/vector-icons'
 
 const SettingsScreen = () => {
     const navigation = useNavigation();

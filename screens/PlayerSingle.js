@@ -1,5 +1,5 @@
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import Header from '../components/general/Header'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { colors } from '../assets/colors/colors'
@@ -195,11 +195,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   instructionsTextStyles: {
-      fontSize: 12,
-      fontFamily: 'ms-regular',
-      color: colors.textColorPri,
-      textAlign: 'justify',
-      marginBottom: 10,
+    fontSize: 12,
+    fontFamily: 'ms-regular',
+    color: colors.textColorPri,
+    textAlign: 'justify',
+    marginBottom: 10,
   },
   bgWrapper: {
     backgroundColor: colors.bgBronze,

@@ -1,4 +1,4 @@
-import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Input from '../components/general/Input'
 import Button from '../components/general/Button'
@@ -6,7 +6,7 @@ import { colors } from '../assets/colors/colors'
 import { getAllAsyncData, storeData } from '../assets/data/async_storage'
 import { useAppContext } from '../context/AppContext'
 import LoadingScreen from './LoadingScreen'
-import { getAllUsers, saveUser } from '../assets/data/users'
+import { getAllUsers } from '../assets/data/users'
 import { Feather } from '@expo/vector-icons'
 
 const LoginScreen = () => {
@@ -68,15 +68,7 @@ const LoginScreen = () => {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{flex: 1}}
-    >
-      <ScrollView 
-        contentContainerStyle={styles.container} 
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled"
-      >
+      <View style={styles.container} >
         <View style={styles.welcomeWrapper}>
           <Text style={styles.welcomeTextStyles}>Welcome</Text>
           <Text style={styles.welcomeSubTextStyles}>to INCLEAD</Text>
@@ -116,8 +108,7 @@ const LoginScreen = () => {
             func={handleSubmit}
           />
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </View>
   )
 }
 

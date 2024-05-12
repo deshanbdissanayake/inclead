@@ -37,7 +37,6 @@ const Header = () => {
 
     useEffect(()=>{
         getData();
-        //logout()
     },[])
 
     const handleLogout = () => {
@@ -57,7 +56,7 @@ const Header = () => {
 
     return (
         <View style={styles.headerWrapper}>
-            <View style={styles.nameWrapper}>
+            <View>
                 <Text style={styles.appNameTextStyles}>inclead</Text>
                 <Text style={styles.gameNameTextStyles}>Hello {userdata.username} !!</Text>
             </View>
@@ -109,9 +108,6 @@ const styles = StyleSheet.create({
         height: 50,
         resizeMode: 'cover',
         borderRadius: 50,
-    },
-    nameWrapper: {
-        //alignItems: 'flex-end',
     },
     appNameTextStyles : {
         color: colors.textColorSec,

@@ -1,5 +1,5 @@
-import { FlatList, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
+import { FlatList, RefreshControl, ScrollView, StyleSheet, View } from 'react-native'
+import React, { useCallback, useState } from 'react'
 import { colors } from '../assets/colors/colors'
 import Subtitle from '../components/general/Subtitle'
 import LeaderBoardCard from '../components/app/LeaderBoardCard'

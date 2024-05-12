@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, BackHandler, Alert, Image } from 'react-native'
-import React, { useEffect } from 'react'
+import { StyleSheet, Text, View, Image } from 'react-native'
+import React from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { colors } from '../assets/colors/colors';
 import Header from '../components/general/Header';
@@ -47,7 +47,7 @@ const NewGameScoreViewScreen = () => {
         <View style={styles.container}>
             <View>
                 <Header text={'Game Scoreboard'} />
-                <View style={styles.tableStyles}>
+                <View>
                     <View style={styles.rowStyles}>
                         <Text style={styles.tableHeaderTextStyles}>Player</Text>
                         <Text style={styles.tableHeaderTextStyles}>Total Points</Text>
@@ -84,9 +84,6 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         paddingHorizontal: 15,
         justifyContent: 'space-between',
-    },
-    tableStyles: {
-
     },
     tableHeaderTextStyles: {
         fontFamily: 'ms-semibold',

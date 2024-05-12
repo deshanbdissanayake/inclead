@@ -1,5 +1,5 @@
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useState, useMemo, useRef, useEffect } from 'react'
+import React, { useCallback, useState, useMemo, useRef } from 'react'
 import { colors } from '../assets/colors/colors'
 import Header from '../components/general/Header'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'

@@ -22,15 +22,16 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ],
-      "package": "com.deshanbdissanayake.snack7e69fbfd2c9c492cb8901f04caed18f2"
+
+      "package": "com.deshanbdissanayake.snack7e69fbfd2c9c492cb8901f04caed18f2",
+      "versionCode": 1,
+      "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
+      "expo-font",
       [
         "expo-image-picker",
         {
@@ -42,6 +43,7 @@
       "eas": {
         "projectId": "bfd45328-969b-4316-bfd1-940fd9e94e46"
       }
-    }
+    },
+    "owner": "deshanbdissanayake"
   }
 }

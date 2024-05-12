@@ -1,5 +1,5 @@
 import { Alert, Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React, { useEffect, useState, useCallback, useMemo, useRef } from 'react'
+import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { colors } from '../assets/colors/colors'
 import Header from '../components/general/Header'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -23,7 +23,6 @@ const NewGameScoreScreen = () => {
     const snapPoints = useMemo(() => [1, '30%'], []);
 
     const [loading, setLoading] = useState(true);
-    const [username, setUsername] = useState(null)
 
     const [matchData, setMatchData] = useState({
         players: [],
@@ -59,7 +58,7 @@ const NewGameScoreScreen = () => {
 
     useEffect(()=>{
         setMatchDataFunc()
-    },[username])
+    },[])
 
     const changePlayerData = (newValue, player_id, type) => {
         let playerIndex = matchData.players.findIndex((e) => e.id === player_id);
@@ -200,7 +199,7 @@ const NewGameScoreScreen = () => {
                 contentContainerStyle={styles.contentContainer} 
                 showsVerticalScrollIndicator={false} 
             >
-                <View style={styles.teamsWrapper}>
+                <View>
                     <View style={styles.teamWrapper}>
                         <Subtitle text={'Team White'} />
                         {matchData.players && matchData.players.length > 0 && 
@@ -306,9 +305,6 @@ const styles = StyleSheet.create({
     contentContainer: {
         flexGrow: 1,
         justifyContent: 'space-between',
-    },
-    teamsWrapper: {
-
     },
     teamWrapper: {
         marginBottom: 20,
