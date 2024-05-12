@@ -24,7 +24,8 @@
       },
       "permissions": [
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.deshanbdissanayake.snack7e69fbfd2c9c492cb8901f04caed18f2"
     },
     "web": {
       "favicon": "./assets/favicon.png"
