@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Keyboard, StyleSheet, SafeAreaView, StatusBar, Platform, Alert } from 'react-native';
+import React, { useEffect } from 'react';
+import { Keyboard, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -9,7 +9,6 @@ import { AppProvider, useAppContext } from './context/AppContext';
 import { colors } from './assets/colors/colors';
 
 import SplashScreen from './screens/SplashScreen';
-import HomeNav from './navigation/HomeNav';
 import LoginNav from './navigation/LoginNav';
 import BottomNav from './navigation/BottomNav';
 
@@ -75,5 +74,6 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.bgColor,
   }
 });

@@ -1,9 +1,6 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import HomeScreen from '../screens/HomeScreen';
-import PlayersList from '../screens/PlayersList';
 import NewGameScreen from '../screens/NewGameScreen';
-import PlayerSingle from '../screens/PlayerSingle';
 import NewGameScoreScreen from '../screens/NewGameScoreScreen';
 import NewGameScoreViewScreen from '../screens/NewGameScoreViewScreen';
 
