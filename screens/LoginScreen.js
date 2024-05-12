@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   welcomeTextStyles: {
-    marginBottom: 10,
+    marginBottom: 5,
     fontSize: 36,
     fontFamily: 'ms-semibold',
     color: colors.textColorPri,

@@ -43,7 +43,10 @@ const App = () => {
 
   return (
     <NavigationContainer>
+      <AppProvider>
+        <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
         <AppContent/>
+      </AppProvider>
     </NavigationContainer>
   );
 }
@@ -54,8 +57,6 @@ const AppContent = () => {
   return (
     <SafeAreaView style={styles.container}>
       <GestureHandlerRootView style={styles.container}>
-        <AppProvider>
-          <StatusBar backgroundColor={colors.white} barStyle="dark-content" />
           <Stack.Navigator>
             {!isLoggedIn ? (
               <Stack.Screen name="LoginNav" component={LoginNav} options={{headerShown: false}} />
@@ -63,7 +64,6 @@ const AppContent = () => {
               <Stack.Screen name="BottomNav" component={BottomNav} options={{headerShown: false}} />
             )}
           </Stack.Navigator>
-        </AppProvider>
       </GestureHandlerRootView>
     </SafeAreaView>
   )
