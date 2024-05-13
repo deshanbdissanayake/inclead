@@ -1,7 +1,12 @@
 // AppContext.js
 import React, { createContext, useState, useContext } from 'react';
 
-const AppContext = createContext();
+const AppContext = createContext({
+  isLoggedIn: false,
+  setIsLoggedIn: () => {},
+  isLoading: true,
+  setIsLoading: () => {}
+});
 
 export const AppProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,5 +20,5 @@ export const AppProvider = ({ children }) => {
 };
 
 export const useAppContext = () => {
-    return useContext(AppContext);
-}
+  return useContext(AppContext);
+};

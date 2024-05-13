@@ -14,7 +14,7 @@ const Leaderboard = () => {
     const [loading, setLoading] = useState(true);
     const [refreshing, setRefreshing] = useState(true);
 
-    const [cardData, setCardData] = useState(null);
+    const [cardData, setCardData] = useState([]);
 
     const getData = async () => {
         try {

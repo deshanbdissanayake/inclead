@@ -20,12 +20,12 @@ const PlayersList = () => {
     const [refreshing, setRefreshing] = useState(true);
     const [btnLoading, setBtnLoading] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [players, setPlayers] = useState(null);
+    const [players, setPlayers] = useState([]);
 
     const [formData, setFormData] = useState({
         id: null,
-        name: null,
-        image: null,
+        name: '',
+        image: '',
         status: 'active',
     })
 
@@ -122,8 +122,8 @@ const PlayersList = () => {
     const resetFunc = () => {
         setFormData({
             id: null,
-            name: null,
-            image: null,
+            name: '',
+            image: '',
             status: 'active',
         });
     }

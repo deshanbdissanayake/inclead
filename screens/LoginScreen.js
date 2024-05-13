@@ -13,8 +13,8 @@ const LoginScreen = () => {
   const { setIsLoggedIn } = useAppContext();
 
   const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [hidePw, setHidePw] = useState(true)
 
   const handleSubmit = async () => {
@@ -163,5 +163,5 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 12,
     right: 15,
-},
+  },
 })

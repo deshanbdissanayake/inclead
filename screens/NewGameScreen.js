@@ -16,10 +16,10 @@ const NewGameScreen = () => {
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(true);
-  const [players, setPlayers] = useState(null);
+  const [players, setPlayers] = useState([]);
   const [playerNum, setPlayerNum] = useState(0);
-  const [teamWhite, setTeamWhite] = useState(null);
-  const [teamBlack, setTeamBlack] = useState(null);
+  const [teamWhite, setTeamWhite] = useState([]);
+  const [teamBlack, setTeamBlack] = useState([]);
 
   const bottomSheetRef = useRef(null);
   const snapPoints = useMemo(() => [1, '25%'], []);

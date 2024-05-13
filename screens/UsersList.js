@@ -47,11 +47,11 @@ const UsersList = () => {
     const [refreshing, setRefreshing] = useState(false);
     const [btnLoading, setBtnLoading] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [users, setUsers] = useState(null);
+    const [users, setUsers] = useState([]);
     const [formData, setFormData] = useState({
         id: null,
-        username: null,
-        password: null,
+        username: '',
+        password: '',
         usertype: 'normal',
     });
     const [hidePw, setHidePw] = useState(true)
@@ -114,8 +114,8 @@ const UsersList = () => {
     const resetFunc = () => {
         setFormData({
             id: null,
-            username: null,
-            password: null,
+            username: '',
+            password: '',
             usertype: 'normal',
         });
         setHidePw(true)

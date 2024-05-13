@@ -1,6 +1,3 @@
-import 'expo-dev-client';
-
-
 import React, { useEffect } from 'react';
 import { Keyboard, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
