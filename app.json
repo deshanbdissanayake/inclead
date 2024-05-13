@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Inclead",
-    "slug": "snack-7e69fbfd-2c9c-492c-b890-1f04caed18f2",
+    "slug": "snack-f5f316b3-6a52-4535-b139-79ac312e3c50",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,10 +22,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-
-      "package": "com.deshanbdissanayake.snack7e69fbfd2c9c492cb8901f04caed18f2",
+      "package": "com.desh1234.snackf5f316b36a524535b13979ac312e3c50",
       "versionCode": 1,
-      "permissions": []
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -41,9 +42,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "bfd45328-969b-4316-bfd1-940fd9e94e46"
+        "projectId": "83910305-5a63-4211-a0f9-0d56aadc4a52"
       }
     },
-    "owner": "deshanbdissanayake"
+    "owner": "desh1234"
   }
 }
