@@ -1,5 +1,5 @@
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useState, useMemo, useRef } from 'react'
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react'
 import { colors } from '../assets/colors/colors'
 import Header from '../components/general/Header'
 import { useFocusEffect, useNavigation } from '@react-navigation/native'
@@ -11,11 +11,13 @@ import Button from '../components/general/Button'
 import { Entypo } from '@expo/vector-icons';
 import MiniButton from '../components/general/MiniButton'
 import BottomSheet from '@gorhom/bottom-sheet';
+import { getMatchStats } from '../assets/data/matches'
 
 const NewGameScreen = () => {
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(true);
+  const [playersOriginal, setPlayersOriginal] = useState([]);
   const [players, setPlayers] = useState([]);
   const [playerNum, setPlayerNum] = useState(0);
   const [teamWhite, setTeamWhite] = useState([]);
@@ -26,19 +28,86 @@ const NewGameScreen = () => {
 
   const getPlayersFunc = async () => {
     try {
-      let data = await getPlayers();
-      setPlayers(data);
+      let playersData = await getPlayers();
+      setPlayersOriginal(playersData);
+      await getMatchesFunc(playersData);
     } catch (error) {
-      console.error('error at new game screen: ', error)
+        console.error('error at NewGameScreen.js -> getPlayersFunc: ', error);
+    }
+  };
+
+  const getMatchesFunc = async (playersData) => {
+    try {
+      let matchesData = await getMatchStats();
+  
+      const playersDict = {};
+  
+      matchesData.forEach((match) => {
+          match.players.forEach((player) => {
+              if (!playersDict[player.id]) {
+                  playersDict[player.id] = {
+                      total_matches: 1,
+                      total_wins: player.match_stt === 'won' ? 1 : 0,
+                      total_plus_points: player.points ?? 0,
+                      total_minus_points: player.minus_points ?? 0,
+                      total_red_pots: player.red_pot ? 1 : 0,
+                      total_foul: player.foul ?? 0,
+                      total_special: player.special_points ?? 0,
+                  };
+              } else {
+                  let existingPlayer = playersDict[player.id];
+                  existingPlayer.total_matches++;
+                  if (player.match_stt === 'won') {
+                      existingPlayer.total_wins++;
+                  }
+                  existingPlayer.total_plus_points += player.points ?? 0;
+                  existingPlayer.total_minus_points += player.minus_points ?? 0;
+                  if (player.red_pot) {
+                      existingPlayer.total_red_pots++;
+                  }
+                  existingPlayer.total_foul += player.foul ?? 0;
+                  existingPlayer.total_special += player.special_points ?? 0;
+              }
+          });
+      });
+  
+      // Calculate total points and value
+      for (const playerId in playersDict) {
+          const player = playersDict[playerId];
+          const totalPoints = (player.total_plus_points * 1) + (player.total_red_pots * 2) + (player.total_wins * 3) + (player.total_special * 1) + (player.total_minus_points * -1) + (player.total_foul * -2);
+          const value = (totalPoints / player.total_matches).toFixed(2);
+          
+          player.total_points = totalPoints.toFixed(2);
+          player.value = parseFloat(value) >= 0 ? value : '0';
+      }
+  
+      // Map the calculated stats back to playersData
+      playersData = playersData.map((p) => ({
+        ...p,
+        total_points: playersDict[p.id] ? playersDict[p.id].total_points : 0,
+        total_matches: playersDict[p.id] ? playersDict[p.id].total_matches : 0,
+        avg_points: playersDict[p.id] ? playersDict[p.id].value : 0,
+      }));
+    
+  
+      // Sort players by name
+      playersData.sort((a, b) => a.name.localeCompare(b.name));
+      setPlayers(playersData);
+    } catch (error) {
+        console.error('error at NewGameScreen.js -> getMatchesFunc: ', error);
     } finally {
-      resetFunc()
-      setLoading(false);
+        setLoading(false);
+        console.log('refreshed')
     }
   }
 
+  useEffect(()=>{
+    getPlayersFunc();
+  },[])
+
   useFocusEffect(
     useCallback(()=>{
-      getPlayersFunc();
+      resetFunc();
     },[])
   )
   
@@ -92,15 +161,16 @@ const NewGameScreen = () => {
         return;
     }
 
-    const currentDateTime = new Date();
+    const currentDateTime = JSON.stringify(new Date());
 
     navigation.navigate('New Game Score', { teamWhite, teamBlack, currentDateTime });
   }
 
   const resetFunc = () => {
-    setPlayerNum(0)
-    setTeamWhite(null)
-    setTeamBlack(null)
+    setPlayerNum(0);
+    setTeamWhite(null);
+    setTeamBlack(null);
+    getMatchesFunc(playersOriginal);
   }
 
   if(loading){

@@ -7,6 +7,15 @@ import Button from '../components/general/Button';
 import { AntDesign } from '@expo/vector-icons';
 
 const PlayerRow = ({ player }) => {
+    const totalPoints = (
+        (player.points * 1)+ 
+        (player.red_pot * 2) + 
+        ((player.match_stt == 'won' ? 1 : 0) * 3) + 
+        (player.special_points * 1) + 
+        (player.minus_points * -1) + 
+        (player.foul * -2)
+    );
+
     return (
         <View style={styles.rowStyles}>
             <View style={styles.tableBodyStyles}>
@@ -20,9 +29,7 @@ const PlayerRow = ({ player }) => {
                 </View>
                 <Text style={styles.tableBodyTextStyles}>{player.name}</Text>
             </View>
-            <Text style={styles.tableBodyTextStyles}>
-                {(parseInt(player.points) + (parseInt(player.red_pot) * 2)) + ((player.match_stt == 'won' ? 1 : 0) * 3) - (parseInt(player.minus_points) + (parseInt(player.foul) * 2))}
-            </Text>
+            <Text style={styles.tableBodyTextStyles}>{totalPoints.toFixed(2)}</Text>
         </View>
     );
 };
@@ -35,12 +42,29 @@ const NewGameScoreViewScreen = () => {
 
     const matchData = JSON.parse(matchDataSent)
 
+    const calculateScore = (player) => {
+        return (
+            player.points * 1 +
+            player.red_pot * 2 +
+            (player.match_stt === 'won' ? 1 : 0) * 3 +
+            (player.special_points || 0) * 1 +
+            (player.minus_points || 0) * -1 +
+            (player.foul || 0) * -2
+        );
+    };
+
+    const playersData = matchData.players.sort((a, b) => calculateScore(b) - calculateScore(a));
+
     const handleNewGame = () => {
         navigation.navigate('New Game');
     };
 
     const handleLeaderboard = () => {
         navigation.navigate('Home')
+    }
+
+    const handleMatchSingle = () => {
+        navigation.navigate('Match Single', { matchData: matchData })
     }
 
     return (
@@ -52,12 +76,18 @@ const NewGameScoreViewScreen = () => {
                         <Text style={styles.tableHeaderTextStyles}>Player</Text>
                         <Text style={styles.tableHeaderTextStyles}>Total Points</Text>
                     </View>
-                    {matchData.players.map((player, i) => (
+                    {playersData.map((player, i) => (
                         <PlayerRow player={player} key={i} />
                     ))}
                 </View>
             </View>
             <View style={styles.btnsWrapper}>
+                <Button
+                    bgColor={colors.bgColor}
+                    content={<Text style={{color: colors.textColorPri, fontFamily: 'ms-regular'}}>Match Details</Text>}
+                    bdr={colors.textColorPri}
+                    func={handleMatchSingle}
+                />
                 <Button
                     bgColor={colors.bgColor}
                     content={<Text style={{color: colors.textColorPri, fontFamily: 'ms-regular'}}>Leaderboard</Text>}

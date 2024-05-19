@@ -86,70 +86,80 @@ const MatchSingle = () => {
                 </View>
 
                 <View style={styles.teamPlayersWrapper}>
-                    {teamData[team].map((player, i) => (
-                        <View style={styles.playerDataWrapper} key={i}>
-                            <View style={styles.playerWrapper}>
-                                <Image style={styles.playerImageStyles} source={{uri: `data:image/png;base64,${player.image}`}} />
-                                <Text style={styles.playerNameStyles}>{player.name}</Text>
+                    {teamData[team].map((player, i) => {
+                        const totalPoints = ((parseFloat(player.points) * 1) + (parseFloat(player.red_pot) * 2) + ((player.match_stt === 'won' ? 1 : 0) * 3 ) + (parseFloat(player.special_points) * 1) + (parseFloat(player.minus_points) * -1) + (parseFloat(player.foul) * -2)).toFixed(2);
+                        
+                        return (
+                            <View style={styles.playerDataWrapper} key={i}>
+                                <View style={styles.playerWrapper}>
+                                    <Image style={styles.playerImageStyles} source={{uri: `data:image/png;base64,${player.image}`}} />
+                                    <Text style={styles.playerNameStyles}>{player.name}</Text>
+                                </View>
+                                <View style={styles.summaryWrapper}>
+                                    <View style={styles.rowWrapper}>
+                                        <Text style={styles.titleTextStyles}>Plus Points</Text>
+                                        <View style={styles.dataTextWrapper}>
+                                            <Text style={styles.dataTextStyles}>{parseFloat(player.points)}</Text>
+                                            <Text style={styles.dataTextStyles}>x</Text>
+                                            <Text style={styles.dataTextStyles}>1</Text>
+                                            <Text style={styles.dataTextStyles}>=</Text>
+                                            <Text style={styles.dataTextStyles}>{parseFloat(player.points)}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.rowWrapper}>
+                                        <Text style={styles.titleTextStyles}>Red Pot</Text>
+                                        <View style={styles.dataTextWrapper}>
+                                            <Text style={styles.dataTextStyles}>{parseFloat(player.red_pot)}</Text>
+                                            <Text style={styles.dataTextStyles}>x</Text>
+                                            <Text style={styles.dataTextStyles}>2</Text>
+                                            <Text style={styles.dataTextStyles}>=</Text>
+                                            <Text style={styles.dataTextStyles}>{parseFloat(player.red_pot) * 2}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.rowWrapper}>
+                                        <Text style={styles.titleTextStyles}>Winning Team Points</Text>
+                                        <View style={styles.dataTextWrapper}>
+                                            <Text style={styles.dataTextStyles}>{player.match_stt == 'won' ? 1: 0}</Text>
+                                            <Text style={styles.dataTextStyles}>x</Text>
+                                            <Text style={styles.dataTextStyles}>3</Text>
+                                            <Text style={styles.dataTextStyles}>=</Text>
+                                            <Text style={styles.dataTextStyles}>{(player.match_stt == 'won' ? 1: 0) * 3}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.rowWrapper}>
+                                        <Text style={styles.titleTextStyles}>Minus Points</Text>
+                                        <View style={styles.dataTextWrapper}>
+                                            <Text style={styles.dataTextStyles}>{parseFloat(player.minus_points)}</Text>
+                                            <Text style={styles.dataTextStyles}>x</Text>
+                                            <Text style={styles.dataTextStyles}>-1</Text>
+                                            <Text style={styles.dataTextStyles}>=</Text>
+                                            <Text style={styles.dataTextStyles}>{parseFloat(player.minus_points) * -1}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.rowWrapper}>
+                                        <Text style={styles.titleTextStyles}>Foul</Text>
+                                        <View style={styles.dataTextWrapper}>
+                                            <Text style={styles.dataTextStyles}>{parseFloat(player.foul)}</Text>
+                                            <Text style={styles.dataTextStyles}>x</Text>
+                                            <Text style={styles.dataTextStyles}>-2</Text>
+                                            <Text style={styles.dataTextStyles}>=</Text>
+                                            <Text style={styles.dataTextStyles}>{parseFloat(player.foul) * -2}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={styles.rowWrapper}>
+                                        <Text style={styles.titleTextStyles}>Special Points</Text>
+                                        <View style={[styles.dataTextWrapper, {justifyContent: 'flex-end'}]}>
+                                            <Text style={styles.dataTextStyles}>{parseFloat(player.special_points) * 1}</Text>
+                                        </View>
+                                    </View>
+                                    <View style={[styles.rowWrapper, styles.totalBgWrapper]}>
+                                        <Text style={styles.titleTextStyles}>Total</Text>
+                                        <Text style={styles.dataTextStyles}>{totalPoints}</Text>
+                                    </View>
+                                </View>
                             </View>
-                            <View style={styles.summaryWrapper}>
-                                <View style={styles.rowWrapper}>
-                                    <Text style={styles.titleTextStyles}>Plus Points</Text>
-                                    <View style={styles.dataTextWrapper}>
-                                        <Text style={styles.dataTextStyles}>{player.points}</Text>
-                                        <Text style={styles.dataTextStyles}>x</Text>
-                                        <Text style={styles.dataTextStyles}>1</Text>
-                                        <Text style={styles.dataTextStyles}>=</Text>
-                                        <Text style={styles.dataTextStyles}>{player.points}</Text>
-                                    </View>
-                                </View>
-                                <View style={styles.rowWrapper}>
-                                    <Text style={styles.titleTextStyles}>Red Pot</Text>
-                                    <View style={styles.dataTextWrapper}>
-                                        <Text style={styles.dataTextStyles}>{player.red_pot}</Text>
-                                        <Text style={styles.dataTextStyles}>x</Text>
-                                        <Text style={styles.dataTextStyles}>2</Text>
-                                        <Text style={styles.dataTextStyles}>=</Text>
-                                        <Text style={styles.dataTextStyles}>{player.red_pot * 2}</Text>
-                                    </View>
-                                </View>
-                                <View style={styles.rowWrapper}>
-                                    <Text style={styles.titleTextStyles}>Winning Team Points</Text>
-                                    <View style={styles.dataTextWrapper}>
-                                        <Text style={styles.dataTextStyles}>{player.match_stt == 'won' ? 1: 0}</Text>
-                                        <Text style={styles.dataTextStyles}>x</Text>
-                                        <Text style={styles.dataTextStyles}>3</Text>
-                                        <Text style={styles.dataTextStyles}>=</Text>
-                                        <Text style={styles.dataTextStyles}>{(player.match_stt == 'won' ? 1: 0) * 3}</Text>
-                                    </View>
-                                </View>
-                                <View style={styles.rowWrapper}>
-                                    <Text style={styles.titleTextStyles}>Minus Points</Text>
-                                    <View style={styles.dataTextWrapper}>
-                                        <Text style={styles.dataTextStyles}>{player.minus_points}</Text>
-                                        <Text style={styles.dataTextStyles}>x</Text>
-                                        <Text style={styles.dataTextStyles}>-1</Text>
-                                        <Text style={styles.dataTextStyles}>=</Text>
-                                        <Text style={styles.dataTextStyles}>{player.minus_points * -1}</Text>
-                                    </View>
-                                </View>
-                                <View style={styles.rowWrapper}>
-                                    <Text style={styles.titleTextStyles}>Foul</Text>
-                                    <View style={styles.dataTextWrapper}>
-                                        <Text style={styles.dataTextStyles}>{player.foul}</Text>
-                                        <Text style={styles.dataTextStyles}>x</Text>
-                                        <Text style={styles.dataTextStyles}>-2</Text>
-                                        <Text style={styles.dataTextStyles}>=</Text>
-                                        <Text style={styles.dataTextStyles}>{player.foul * -2}</Text>
-                                    </View>
-                                </View>
-                                <View style={[styles.rowWrapper, styles.totalBgWrapper]}>
-                                    <Text style={styles.titleTextStyles}>Total</Text>
-                                    <Text style={styles.dataTextStyles}>{(player.points) + (player.red_pot * 2) + ((player.match_stt === 'won' ? 1 : 0) * 3 ) - (player.minus_points) - (player.foul * 2)}</Text>
-                                </View>
-                            </View>
-                        </View>
-                    ))}
+                        )
+                    })}
                 </View>
             </View>
         );

@@ -12,7 +12,7 @@ const PlayerSingle = () => {
   const route = useRoute();
 
   const bottomSheetRef = useRef(null);
-  const snapPoints = useMemo(() => [1, '30%'], []);
+  const snapPoints = useMemo(() => [1, '30%', '50%'], []);
 
   const { playerData } = route.params;
 
@@ -21,7 +21,8 @@ const PlayerSingle = () => {
   }
 
   const handleInstructions = () => {
-    bottomSheetRef.current.expand();
+    bottomSheetRef.current.snapToIndex(1);
+    bottomSheetRef.current.collapse();
   }
 
   return (
@@ -47,94 +48,94 @@ const PlayerSingle = () => {
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Plus Points</Text>
             <View style={styles.dataTextWrapper}>
-              <Text style={styles.dataTextStyles}>{playerData.total_plus_points}</Text>
+              <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_plus_points)}</Text>
               <Text style={styles.dataTextStyles}>x</Text>
               <Text style={styles.dataTextStyles}>1</Text>
               <Text style={styles.dataTextStyles}>=</Text>
-              <Text style={styles.dataTextStyles}>{playerData.total_plus_points * 1}</Text>
+              <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_plus_points) * 1}</Text>
             </View>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Minus Points</Text>
             <View style={styles.dataTextWrapper}>
-              <Text style={styles.dataTextStyles}>{playerData.total_minus_points}</Text>
+              <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_minus_points)}</Text>
               <Text style={styles.dataTextStyles}>x</Text>
               <Text style={styles.dataTextStyles}>-1</Text>
               <Text style={styles.dataTextStyles}>=</Text>
-              <Text style={styles.dataTextStyles}>{playerData.total_minus_points * -1}</Text>
+              <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_minus_points) * -1}</Text>
             </View>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Red Pocket Points</Text>
             <View style={styles.dataTextWrapper}>
-              <Text style={styles.dataTextStyles}>{playerData.total_red_pots}</Text>
+              <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_red_pots)}</Text>
               <Text style={styles.dataTextStyles}>x</Text>
               <Text style={styles.dataTextStyles}>2</Text>
               <Text style={styles.dataTextStyles}>=</Text>
-              <Text style={styles.dataTextStyles}>{playerData.total_red_pots * 2}</Text>
+              <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_red_pots) * 2}</Text>
             </View>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Winning Points</Text>
             <View style={styles.dataTextWrapper}>
-              <Text style={styles.dataTextStyles}>{playerData.total_wins}</Text>
+              <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_wins)}</Text>
               <Text style={styles.dataTextStyles}>x</Text>
               <Text style={styles.dataTextStyles}>3</Text>
               <Text style={styles.dataTextStyles}>=</Text>
-              <Text style={styles.dataTextStyles}>{playerData.total_wins * 3}</Text>
+              <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_wins) * 3}</Text>
             </View>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Foul Points</Text>
             <View style={styles.dataTextWrapper}>
-              <Text style={styles.dataTextStyles}>{playerData.total_foul}</Text>
+              <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_foul)}</Text>
               <Text style={styles.dataTextStyles}>x</Text>
               <Text style={styles.dataTextStyles}>-2</Text>
               <Text style={styles.dataTextStyles}>=</Text>
-              <Text style={styles.dataTextStyles}>{playerData.total_foul * -2}</Text>
+              <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_foul) * -2}</Text>
             </View>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Special Points</Text>
             <View style={[styles.dataTextWrapper, { justifyContent: 'flex-end' }]}>
-              <Text style={styles.dataTextStyles}>{playerData.total_special}</Text>
+              <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_special)}</Text>
             </View>
           </View>
           <View style={[styles.rowStyles, {borderTopWidth: 2}]}>
             <Text style={styles.headerTextStyles}>Total Points</Text>
-            <Text style={styles.dataTextStyles}>{playerData.total_points}</Text>
+            <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_points)}</Text>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Matches</Text>
-            <Text style={styles.dataTextStyles}>{playerData.total_matches}</Text>
+            <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_matches)}</Text>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Wins</Text>
-            <Text style={styles.dataTextStyles}>{playerData.total_wins}</Text>
+            <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_wins)}</Text>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Loses</Text>
-            <Text style={styles.dataTextStyles}>{playerData.total_matches - playerData.total_wins}</Text>
+            <Text style={styles.dataTextStyles}>{parseFloat(playerData.total_matches) - parseFloat(playerData.total_wins)}</Text>
           </View>
           <View style={[styles.rowStyles, {borderTopWidth: 2}]}>
             <Text style={styles.headerTextStyles}>Avg Total Points Per Match</Text>
-            <Text style={styles.dataTextStyles}>{playerData.value}</Text>
+            <Text style={styles.dataTextStyles}>{parseFloat(playerData.value)}</Text>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Avg Plus Points Per Match</Text>
-            <Text style={styles.dataTextStyles}>{(playerData.total_plus_points / playerData.total_matches).toFixed(2)}</Text>
+            <Text style={styles.dataTextStyles}>{(parseFloat(playerData.total_plus_points) / parseFloat(playerData.total_matches)).toFixed(2)}</Text>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Avg Minus Points Per Match</Text>
-            <Text style={styles.dataTextStyles}>{(playerData.total_minus_points / playerData.total_matches).toFixed(2)}</Text>
+            <Text style={styles.dataTextStyles}>{(parseFloat(playerData.total_minus_points) / parseFloat(playerData.total_matches)).toFixed(2)}</Text>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Red Pocket Percentage</Text>
-            <Text style={styles.dataTextStyles}>{(playerData.total_red_pots/playerData.total_matches * 100).toFixed(2)}%</Text>
+            <Text style={styles.dataTextStyles}>{(parseFloat(playerData.total_red_pots)/parseFloat(playerData.total_matches) * 100).toFixed(2)}%</Text>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Winning Percentage</Text>
-            <Text style={styles.dataTextStyles}>{(playerData.total_wins / playerData.total_matches * 100).toFixed(2)}%</Text>
+            <Text style={styles.dataTextStyles}>{(parseFloat(playerData.total_wins) / parseFloat(playerData.total_matches) * 100).toFixed(2)}%</Text>
           </View>
           <View style={[styles.rowStyles, styles.bgWrapper]}>
             <Text style={styles.headerTextStyles}>Ranking</Text>
@@ -152,8 +153,9 @@ const PlayerSingle = () => {
           <View style={styles.bottomSheetContainer}>
               <Text style={styles.bottomSheetTitleTextStyles}>How Total Points are Calculated</Text>
               <Text style={styles.instructionsTextStyles}>* If your own carromman is pocketed 1 point. If red is pocketed 2 points.</Text>
-              <Text style={styles.instructionsTextStyles}>** If your opponents carromman is pocketed -1 points. Foul -2 points.</Text>
-              <Text style={styles.instructionsTextStyles}>*** If your team wins 3 points.</Text>
+              <Text style={styles.instructionsTextStyles}>* If your opponents carromman is pocketed -1 points. Foul -2 points.</Text>
+              <Text style={styles.instructionsTextStyles}>* If your team wins 3 points.</Text>
+              <Text style={styles.instructionsTextStyles}>* Special points are offered according to opponent rankings.</Text>
           </View>
       </BottomSheet>
     </View>

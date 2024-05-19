@@ -12,6 +12,7 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import LoadingScreen from './LoadingScreen'
 import { saveMatch } from '../assets/data/matches'
 import { getAllAsyncData } from '../assets/data/async_storage'
+import { formatDateToString } from '../assets/data/common'
 
 const NewGameScoreScreen = () => {
     const navigation = useNavigation();
@@ -19,8 +20,96 @@ const NewGameScoreScreen = () => {
 
     const { teamWhite, teamBlack, currentDateTime } = route.params;
 
+    if(teamWhite.length == 1){
+        // two players
+        let white_player_1_avg = parseFloat(teamWhite[0].avg_points);
+        let black_player_1_avg = parseFloat(teamBlack[0].avg_points);
+
+        //console.log('hi', white_player_1_avg, black_player_1_avg)
+
+        let white_sp = 0;
+        let black_sp = 0;
+
+        if (white_player_1_avg >= 8 && black_player_1_avg < 8) {
+            black_sp = white_player_1_avg - black_player_1_avg;
+            white_sp = black_player_1_avg - white_player_1_avg;
+        } else if (white_player_1_avg >= 4) {
+            if (black_player_1_avg >= 8) {
+                white_sp = black_player_1_avg - white_player_1_avg;
+                black_sp = white_player_1_avg - black_player_1_avg;
+            } else if (black_player_1_avg < 4) {
+                black_sp = white_player_1_avg - black_player_1_avg;
+                white_sp = black_player_1_avg - white_player_1_avg;
+            }
+        } else if (black_player_1_avg >= 4) {
+            white_sp = black_player_1_avg - white_player_1_avg;
+            black_sp = white_player_1_avg - black_player_1_avg;
+        }
+
+        teamWhite[0].special_points = white_sp.toFixed(2);
+        teamBlack[0].special_points = black_sp.toFixed(2);
+    }else{
+        // four players
+        let white_player_1_avg = parseFloat(teamWhite[0].avg_points);
+        let white_player_2_avg = parseFloat(teamWhite[1].avg_points);
+        let black_player_1_avg = parseFloat(teamBlack[0].avg_points);
+        let black_player_2_avg = parseFloat(teamBlack[1].avg_points);
+
+        //console.log('hi', white_player_1_avg, white_player_2_avg, black_player_1_avg, black_player_2_avg)
+
+        let white_sp = 0;
+        let black_sp = 0;
+
+        if (white_player_1_avg >= 8 || white_player_2_avg >= 8) {
+            if (black_player_1_avg < 8 && black_player_2_avg < 8) {
+                let white_player_sum = ((white_player_1_avg >= 8 ? white_player_1_avg : 0) + (white_player_2_avg >= 8 ? white_player_2_avg : 0));
+                let white_player_cnt = ((white_player_1_avg >= 8 ? 1 : 0) + (white_player_2_avg >= 8 ? 1 : 0));
+                let black_player_avg = (black_player_1_avg + black_player_2_avg) / 2;
+                let tot_avg = white_player_sum/white_player_cnt;
+        
+                black_sp = tot_avg - black_player_avg;
+                white_sp = black_player_avg - tot_avg;
+            }
+        } else if (black_player_1_avg >= 8 || black_player_2_avg >= 8) {
+            if (white_player_1_avg < 8 && white_player_2_avg < 8) {
+                let black_player_sum = ((black_player_1_avg >= 8 ? black_player_1_avg : 0) + (black_player_2_avg >= 8 ? black_player_2_avg : 0));
+                let black_player_cnt = ((black_player_1_avg >= 8 ? 1 : 0) + (black_player_2_avg >= 8 ? 1 : 0));
+                let white_player_avg = (white_player_1_avg + white_player_2_avg) / 2;
+                let tot_avg = black_player_sum/black_player_cnt;
+        
+                white_sp = tot_avg - white_player_avg;
+                black_sp = white_player_avg - tot_avg;
+            }
+        } else if (white_player_1_avg >= 4 || white_player_2_avg >= 4) {
+            if (black_player_1_avg < 4 && black_player_2_avg < 4) {
+                let white_player_sum = ((white_player_1_avg >= 4 ? white_player_1_avg : 0) + (white_player_2_avg >= 4 ? white_player_2_avg : 0));
+                let white_player_cnt = ((white_player_1_avg >= 4 ? 1 : 0) + (white_player_2_avg >= 4 ? 1 : 0));
+                let black_player_avg = (black_player_1_avg + black_player_2_avg) / 2;
+                let tot_avg = white_player_sum/white_player_cnt;
+        
+                black_sp = tot_avg - black_player_avg;
+                white_sp = black_player_avg - tot_avg;
+            }
+        } else if (black_player_1_avg >= 4 || black_player_2_avg >= 4) {
+            if (white_player_1_avg < 4 && white_player_2_avg < 4) {
+                let black_player_sum = ((black_player_1_avg >= 4 ? black_player_1_avg : 0) + (black_player_2_avg >= 4 ? black_player_2_avg : 0));
+                let black_player_cnt = ((black_player_1_avg >= 4 ? 1 : 0) + (black_player_2_avg >= 4 ? 1 : 0));
+                let white_player_avg = (white_player_1_avg + white_player_2_avg) / 2;
+                let tot_avg = black_player_sum/black_player_cnt;
+        
+                white_sp = tot_avg - white_player_avg;
+                black_sp = white_player_avg - tot_avg;
+            }
+        }
+
+        teamWhite[0].special_points = white_sp.toFixed(2);
+        teamWhite[1].special_points = white_sp.toFixed(2);
+        teamBlack[0].special_points = black_sp.toFixed(2);
+        teamBlack[1].special_points = black_sp.toFixed(2);
+    }
+
     const bottomSheetRef = useRef(null);
-    const snapPoints = useMemo(() => [1, '30%'], []);
+    const snapPoints = useMemo(() => [1, '30%', '50%'], []);
 
     const [loading, setLoading] = useState(true);
 
@@ -44,7 +133,8 @@ const NewGameScoreScreen = () => {
                     points: 0,
                     minus_points: 0,
                     red_pot: 0,
-                    foul: 0
+                    foul: 0,
+                    special_points: player.special_points
                 });
             });
         };
@@ -113,7 +203,8 @@ const NewGameScoreScreen = () => {
             points: 0,
             minus_points: 0,
             red_pot: 0,
-            foul: 0
+            foul: 0,
+            special_points: 0
         }));
     
         setMatchData(prevData => ({
@@ -124,14 +215,34 @@ const NewGameScoreScreen = () => {
 
     const updateWinningTeam = (type) => {
         setLoading(true);
-        const startDateTime = currentDateTime;
+        const startDateTime = new Date(JSON.parse(currentDateTime));
         const endtDateTime = new Date();
 
-        const updatedPlayers = matchData.players.map((player) => ({
-            ...player,
-            match_stt: player.team == type ? 'won' : 'lost'
-        }));
-    
+        const updatedPlayers = matchData.players.map((player) => {
+            let special_points;
+            if (player.team === type) {
+                // won
+                if (player.special_points > 0) {
+                    special_points = parseFloat(player.special_points);
+                } else {
+                    special_points = 0;
+                }
+            } else {
+                // lost
+                if (player.special_points < 0) {
+                    special_points = parseFloat(player.special_points);
+                } else {
+                    special_points = 0;
+                }
+            }
+        
+            return {
+                ...player,
+                match_stt: player.team === type ? 'won' : 'lost',
+                special_points,
+            };
+        });
+              
         setMatchData(prevData => ({
             ...prevData,
             players: updatedPlayers,
@@ -139,7 +250,12 @@ const NewGameScoreScreen = () => {
             endedAt: endtDateTime
         }));
 
-        let formData = {...matchData, players: updatedPlayers};
+        let formData = {
+            ...matchData, 
+            players: updatedPlayers,
+            startedAt: startDateTime,
+            endedAt: endtDateTime
+        };
 
         saveMatchData(formData);
     };
@@ -147,6 +263,11 @@ const NewGameScoreScreen = () => {
     const saveMatchData = async (formData) => {
         try {
             let res = await saveMatch(formData);
+
+            formData.createdAt = formatDateToString(new Date());
+            formData.startedAt = formatDateToString(formData.startedAt);
+            formData.endedAt = formatDateToString(formData.endedAt);
+
             if(res.stt == 'success'){
                 Alert.alert('Success', res.msg)
                 navigation.navigate('New Game Score Board', { matchDataSent: JSON.stringify(formData) });
@@ -180,7 +301,8 @@ const NewGameScoreScreen = () => {
     }
     
     const handleInstructions = () => {
-        bottomSheetRef.current.expand();
+        bottomSheetRef.current.snapToIndex(1);
+        bottomSheetRef.current.collapse();
     }
 
     if(loading){
@@ -276,8 +398,9 @@ const NewGameScoreScreen = () => {
                     </Text>
 
                     <Text style={styles.instructionsTextStyles}>* If your own carromman is pocketed 1 point. If red is pocketed 2 points.</Text>
-                    <Text style={styles.instructionsTextStyles}>** If your opponents carromman is pocketed -1 points. Foul -2 points.</Text>
-                    <Text style={styles.instructionsTextStyles}>*** If your team wins 3 points.</Text>
+                    <Text style={styles.instructionsTextStyles}>* If your opponents carromman is pocketed -1 points. Foul -2 points.</Text>
+                    <Text style={styles.instructionsTextStyles}>* If your team wins 3 points.</Text>
+                    <Text style={styles.instructionsTextStyles}>* Special points are offered according to opponent rankings.</Text>
                 </View>
             </BottomSheet>
         </View>
