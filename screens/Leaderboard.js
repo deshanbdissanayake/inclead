@@ -51,24 +51,24 @@ const Leaderboard = () => {
                         image: playerData.image,
                         total_matches: 1,
                         total_wins: player.match_stt === 'won' ? 1 : 0,
-                        total_plus_points: parseFloat(player.points) ?? 0,
-                        total_minus_points: parseFloat(player.minus_points) ?? 0,
+                        total_plus_points: parseFloat(player.points) || 0,
+                        total_minus_points: parseFloat(player.minus_points) || 0,
                         total_red_pots: parseFloat(player.red_pot) ? 1 : 0,
-                        total_foul: parseFloat(player.foul) ?? 0,
-                        total_special: parseFloat(player.special_points) ?? 0
+                        total_foul: parseFloat(player.foul) || 0,
+                        total_special: parseFloat(player.special_points) || 0
                     });
                 } else {
                     playersArr[existingPlayerIndex].total_matches++;
                     if (player.match_stt == 'won') {
                         playersArr[existingPlayerIndex].total_wins++;
                     }
-                    playersArr[existingPlayerIndex].total_plus_points += parseFloat(player.points) ?? 0;
-                    playersArr[existingPlayerIndex].total_minus_points += parseFloat(player.minus_points) ?? 0;
+                    playersArr[existingPlayerIndex].total_plus_points += parseFloat(player.points) || 0;
+                    playersArr[existingPlayerIndex].total_minus_points += parseFloat(player.minus_points) || 0;
                     if (player.red_pot) {
                         playersArr[existingPlayerIndex].total_red_pots++;
                     }
-                    playersArr[existingPlayerIndex].total_foul += parseFloat(player.foul) ?? 0;
-                    playersArr[existingPlayerIndex].total_special += parseFloat(player.special_points) ?? 0;
+                    playersArr[existingPlayerIndex].total_foul += parseFloat(player.foul) || 0;
+                    playersArr[existingPlayerIndex].total_special += parseFloat(player.special_points) || 0;
                 }
             });
         });
