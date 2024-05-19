@@ -1,25 +1,36 @@
 import { db } from "../../db/firestore";
-import { collection, getDocs, doc, addDoc, updateDoc } from 'firebase/firestore/lite';
-import { getPlayers } from "./players";
+import { collection, getDocs, doc, addDoc, updateDoc, query, where, Timestamp  } from 'firebase/firestore/lite';
 import { getAllAsyncData } from "./async_storage";
 import { Alert } from "react-native";
+import { formatDateToString } from "./common";
 
 const getMatchStats = async () => {
     const matchesCol = collection(db, 'matches');
-    const matchSnapshot = await getDocs(matchesCol);
-    const activeMatchesList = await Promise.all(matchSnapshot.docs
-        .map(async doc => {
-            const players = await formatPlayer(doc.data().players);
-            return {
-                id: doc.id,
-                players: players,
-                type: doc.data().type,
-                createdAt: formatDate(doc.data().createdAt.toDate()),
-                status: doc.data().status,
-            };
-        }));
+    
+    // Calculate the date for two weeks ago
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+    
+    // Create a Firestore query to get matches from the last two weeks
+    const q = query( matchesCol, where('createdAt', '>=', Timestamp.fromDate(twoWeeksAgo)));
+    
+    const querySnapshot = await getDocs(q);
+    const matches = [];
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
 
-    const filteredMatches = activeMatchesList.filter(match => match.status === 'active')
+        matches.push({
+            id: doc.id,
+            players: data.players,
+            type: data.type,
+            createdAt: formatDateToString(data.createdAt.toDate()),
+            startedAt: data.startedAt ? formatDateToString(data.startedAt.toDate()) : formatDateToString(data.createdAt.toDate()),
+            endedAt: data.endedAt ? formatDateToString(data.endedAt.toDate()) : formatDateToString(data.createdAt.toDate()),
+            status: data.status,
+        })
+    });
+  
+    const filteredMatches = matches.filter(match => match.status === 'active')
         .sort((a, b) => {
             if (a.createdAt < b.createdAt) return 1;
             if (a.createdAt > b.createdAt) return -1;
@@ -27,32 +38,7 @@ const getMatchStats = async () => {
         });
 
     return filteredMatches;
-}
-
-
-const formatPlayer = async (players) => {
-    const playersList = await getPlayers();
-    const playerMap = new Map(playersList.map(player => [player.id, player]));
-
-    const updatedPlayers = players.map(player => ({
-        ...player,
-        image: playerMap.get(player.id).image,
-        name: playerMap.get(player.id).name
-    }));
-    return updatedPlayers;
-}
-
-// Function to format date to "YYYY-MM-DD hh:mm a" format
-const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    let hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const meridiem = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12; // Convert hours to 12-hour format
-    return `${year}-${month}-${day} ${hours}:${minutes} ${meridiem}`;
-}
+  };
 
 const saveMatch = async (matchData) => {
     try {
@@ -106,4 +92,4 @@ const deleteMatch = async (id) => {
     }
 }
 
-export { getMatchStats, saveMatch, formatPlayer, deleteMatch }
+export { getMatchStats, saveMatch, deleteMatch }

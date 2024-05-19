@@ -92,7 +92,9 @@ const NewGameScreen = () => {
         return;
     }
 
-    navigation.navigate('New Game Score', { teamWhite, teamBlack });
+    const currentDateTime = new Date();
+
+    navigation.navigate('New Game Score', { teamWhite, teamBlack, currentDateTime });
   }
 
   const resetFunc = () => {

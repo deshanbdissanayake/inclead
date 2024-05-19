@@ -17,7 +17,7 @@ const NewGameScoreScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
 
-    const { teamWhite, teamBlack } = route.params;
+    const { teamWhite, teamBlack, currentDateTime } = route.params;
 
     const bottomSheetRef = useRef(null);
     const snapPoints = useMemo(() => [1, '30%'], []);
@@ -124,6 +124,8 @@ const NewGameScoreScreen = () => {
 
     const updateWinningTeam = (type) => {
         setLoading(true);
+        const startDateTime = currentDateTime;
+        const endtDateTime = new Date();
 
         const updatedPlayers = matchData.players.map((player) => ({
             ...player,
@@ -132,7 +134,9 @@ const NewGameScoreScreen = () => {
     
         setMatchData(prevData => ({
             ...prevData,
-            players: updatedPlayers
+            players: updatedPlayers,
+            startedAt: startDateTime,
+            endedAt: endtDateTime
         }));
 
         let formData = {...matchData, players: updatedPlayers};

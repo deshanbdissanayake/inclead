@@ -55,7 +55,7 @@ const PlayerSingle = () => {
             </View>
           </View>
           <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Total Red Pots</Text>
+            <Text style={styles.headerTextStyles}>Total Red Pocket Points</Text>
             <View style={styles.dataTextWrapper}>
               <Text style={styles.dataTextStyles}>{playerData.total_red_pots}</Text>
               <Text style={styles.dataTextStyles}>x</Text>
@@ -65,7 +65,7 @@ const PlayerSingle = () => {
             </View>
           </View>
           <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Total Wins</Text>
+            <Text style={styles.headerTextStyles}>Total Winning Points</Text>
             <View style={styles.dataTextWrapper}>
               <Text style={styles.dataTextStyles}>{playerData.total_wins}</Text>
               <Text style={styles.dataTextStyles}>x</Text>
@@ -85,7 +85,7 @@ const PlayerSingle = () => {
             </View>
           </View>
           <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Total Fouls</Text>
+            <Text style={styles.headerTextStyles}>Total Foul Points</Text>
             <View style={styles.dataTextWrapper}>
               <Text style={styles.dataTextStyles}>{playerData.total_foul}</Text>
               <Text style={styles.dataTextStyles}>x</Text>
@@ -103,8 +103,32 @@ const PlayerSingle = () => {
             <Text style={styles.dataTextStyles}>{playerData.total_matches}</Text>
           </View>
           <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Avg Points Per Match</Text>
+            <Text style={styles.headerTextStyles}>Total Wins</Text>
+            <Text style={styles.dataTextStyles}>{playerData.total_wins}</Text>
+          </View>
+          <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Total Loses</Text>
+            <Text style={styles.dataTextStyles}>{playerData.total_matches - playerData.total_wins}</Text>
+          </View>
+          <View style={[styles.rowStyles, {borderTopWidth: 2}]}>
+            <Text style={styles.headerTextStyles}>Avg Total Points Per Match</Text>
             <Text style={styles.dataTextStyles}>{playerData.value}</Text>
+          </View>
+          <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Avg Plus Points Per Match</Text>
+            <Text style={styles.dataTextStyles}>{(playerData.total_points / playerData.total_matches).toFixed(2)}</Text>
+          </View>
+          <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Avg Minus Points Per Match</Text>
+            <Text style={styles.dataTextStyles}>{(playerData.total_minus_points / playerData.total_matches).toFixed(2)}</Text>
+          </View>
+          <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Red Pocket Percentage</Text>
+            <Text style={styles.dataTextStyles}>{(playerData.total_red_pots/playerData.total_matches * 100).toFixed(2)}%</Text>
+          </View>
+          <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Winning Percentage</Text>
+            <Text style={styles.dataTextStyles}>{(playerData.total_wins / playerData.total_matches * 100).toFixed(2)}%</Text>
           </View>
           <View style={[styles.rowStyles, styles.bgWrapper]}>
             <Text style={styles.headerTextStyles}>Ranking</Text>

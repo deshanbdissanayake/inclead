@@ -6,13 +6,19 @@ import { colors } from '../assets/colors/colors'
 import { AntDesign } from '@expo/vector-icons';
 import { deleteMatch } from '../assets/data/matches';
 import Button from '../components/general/Button';
-import { getAllAsyncData } from '../assets/data/async_storage';
 import LoadingScreen from './LoadingScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { formatDateToObject } from '../assets/data/common';
 
 const MatchSingle = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const { matchData } = route.params;
+
+    const startedAtDate = formatDateToObject(matchData.startedAt);
+    const endedAtDate = formatDateToObject(matchData.endedAt);
+    const timeDifference = endedAtDate - startedAtDate;
+    const minutesDifference = Math.floor(timeDifference / (1000 * 60));
 
     const teamData = {
         white: matchData.players.filter(player => player.team === 'white'),
@@ -24,8 +30,8 @@ const MatchSingle = () => {
 
     const getData = async () => {
         try {
-            let res = await getAllAsyncData();
-            let userdata = JSON.parse(res.userdata);
+            let res = await AsyncStorage.getItem('userdata');
+            let userdata = JSON.parse(res);
             setAsyncUserData(userdata);
         } catch (error) {
             console.error('error at match single async get: ', error)
@@ -160,6 +166,10 @@ const MatchSingle = () => {
                 contentContainerStyle={styles.teamsWrapper}
                 showsVerticalScrollIndicator={false}
             >
+                <View style={styles.teamWrapper}>
+                    <Text style={styles.playerNameStyles}>Match Time: {minutesDifference} mins</Text>
+                </View>
+
                 {renderTeam('white')}
                 {renderTeam('black')}
 

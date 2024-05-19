@@ -12,12 +12,13 @@ import { Feather } from '@expo/vector-icons'
 const LoginScreen = () => {
   const { setIsLoggedIn } = useAppContext();
 
-  const [loading, setLoading] = useState(true);
+  const [btnLoading, setBtnLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [hidePw, setHidePw] = useState(true)
 
   const handleSubmit = async () => {
+    setBtnLoading(true)
     try {
       // Fetch user data only if needed
       const users = await getAllUsers();
@@ -39,32 +40,23 @@ const LoginScreen = () => {
     
     } catch (error) {
         console.error('Error at login screen async save: ', error);
+    } finally {
+      setBtnLoading(false)
     }
   }
 
-  const getData = async () => {
+  const handleGuest = async () => {
     try {
-      let res = await getAllAsyncData();
-      
-      if(res && res.userdata){
-        let userdata = JSON.parse(res.userdata);
-        if(userdata.username){
+      const user = { username: 'Guest', usertype: 'guest', password: null };
+      // Store user data and set logged in status
+      const res = await storeData('userdata', JSON.stringify(user));
+    
+      if (res) {
           setIsLoggedIn(true);
-        }
       }
     } catch (error) {
-      console.error('Error at login screen async get: ', error);
-    } finally {
-      setLoading(false);
+      console.error('error at LoginScreen.js => handleGuest: ', error)
     }
-  }  
-
-  useEffect(()=>{
-    getData()
-  },[])
-
-  if(loading){
-    return <LoadingScreen/>
   }
 
   return (
@@ -91,7 +83,7 @@ const LoginScreen = () => {
             value={password}
             onChangeText={(text) => setPassword(text)}
             textCenter={true}
-            secureTextEntry={true}
+            secureTextEntry={hidePw}
           />
           {(<TouchableOpacity style={styles.pwShowStyles} onPress={() => setHidePw(prevData => (!prevData))}>
               {hidePw ? (
@@ -104,8 +96,19 @@ const LoginScreen = () => {
         <View style={styles.formItemWrapper}>
           <Button
             bgColor={colors.bgColorSec}
-            content={<Text style={styles.btnTextStyles}>Let's Go !!</Text>}
+            content={<Text style={[styles.btnTextStyles, {color: colors.textColorSec}]}>Let's Go !!</Text>}
             func={handleSubmit}
+            loading={btnLoading}
+            loaderIconColor={colors.textColorSec}
+            bdr={colors.bgColorSec}
+          />
+          <Button
+            bgColor={colors.bgColor}
+            content={<Text style={[styles.btnTextStyles, {color: colors.textColorPri}]}>Login as a Guest</Text>}
+            func={handleGuest}
+            loading={btnLoading}
+            loaderIconColor={colors.textColorPri}
+            bdr={colors.textColorPri}
           />
         </View>
       </View>
@@ -129,7 +132,6 @@ const styles = StyleSheet.create({
   },
   btnTextStyles: {
     fontFamily: 'ms-regular',
-    color: colors.textColorSec,
   },
   welcomeWrapper: {
     marginBottom: 50,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Keyboard, StyleSheet, StatusBar, SafeAreaView } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -11,11 +11,13 @@ import { colors } from './assets/colors/colors';
 import SplashScreen from './screens/SplashScreen';
 import LoginNav from './navigation/LoginNav';
 import BottomNav from './navigation/BottomNav';
+import NetInfo from '@react-native-community/netinfo';
+import NoInternetScreen from './screens/NoInternetScreen';
+
 
 const Stack = createStackNavigator();
 
 const App = () => {
-
   useEffect(()=>{
     // unfocus from text inputs when keyboard hides
     const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
@@ -26,7 +28,6 @@ const App = () => {
     return () => {
       keyboardDidHideListener.remove();
     };
-
   }, []);
 
   // load fonts
@@ -53,6 +54,20 @@ const App = () => {
 
 const AppContent = () => {
   const { isLoggedIn } = useAppContext();
+  const [isConnected, setIsConnected] = useState(true);
+
+  useEffect(() => {
+    const checkInternetConnection = async () => {
+      const state = await NetInfo.fetch();
+      setIsConnected(state.isConnected);
+    };
+
+    checkInternetConnection();
+  }, []);
+
+  if (!isConnected) {
+    return <NoInternetScreen />;
+  }
 
   return (
     <SafeAreaView style={{flex: 1}}>

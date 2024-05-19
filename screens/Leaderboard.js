@@ -7,6 +7,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { getMatchStats } from '../assets/data/matches'
 import LoadingScreen from './LoadingScreen'
 import NoData from '../components/general/NoData'
+import { getPlayers } from '../assets/data/players'
 
 const Leaderboard = () => {
     const navigation = useNavigation();
@@ -18,8 +19,10 @@ const Leaderboard = () => {
 
     const getData = async () => {
         try {
-            let data = await getMatchStats();
-            await getLeaderboard(data);
+            let matchesData = await getMatchStats();
+            let playersData = await getPlayers();
+            
+            await getLeaderboard(matchesData, playersData);
         } catch (error) {
             console.log('error at leaderboard.js: ', error)
         } finally {
@@ -34,17 +37,18 @@ const Leaderboard = () => {
         },[])
     )
 
-    const getLeaderboard = async (data) => {
+    const getLeaderboard = async (matchesData, playersData) => {
         let playersArr = [];
     
-        data.forEach((match) => {
+        matchesData.forEach((match) => {
             match.players.forEach((player) => {
+                let playerData = playersData.find(p => p.id === player.id);
                 let existingPlayerIndex = playersArr.findIndex((p) => p.id === player.id);
                 if (existingPlayerIndex === -1) {
                     playersArr.push({
                         id: player.id,
-                        name: player.name,
-                        image: player.image,
+                        name: playerData.name,
+                        image: playerData.image,
                         total_matches: 1,
                         total_wins: player.match_stt == 'won' ? 1 : 0,
                         total_points: player.points,

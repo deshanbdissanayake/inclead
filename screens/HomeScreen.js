@@ -3,41 +3,21 @@ import React, { useEffect, useState } from 'react'
 import { colors } from '../assets/colors/colors'
 import { useNavigation } from '@react-navigation/native';
 import Leaderboard from './Leaderboard';
-import { getAllAsyncData } from '../assets/data/async_storage';
 import LoadingScreen from './LoadingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAppContext } from '../context/AppContext';
 import MiniButton from '../components/general/MiniButton';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import { useAppContext } from '../context/AppContext';
 
-const Header = () => {
+const Header = ({userdata}) => {
     const navigation = useNavigation();
 
     const { setIsLoggedIn } = useAppContext();
-
-    const [loading, setLoading] = useState(true)
-    const [userdata, setUserdata] = useState(null);
-
-    const getData = async () => {
-        try {
-            let res = await getAllAsyncData()
-            let userdata = JSON.parse(res.userdata)
-            setUserdata(userdata)
-        } catch (error) {
-            console.error('error at home screen async get: ', error)
-        } finally {
-            setLoading(false)
-        }
-    }
 
     const logout = () => {
         AsyncStorage.clear();
         setIsLoggedIn(false);
     }
-
-    useEffect(()=>{
-        getData();
-    },[])
 
     const handleLogout = () => {
         Alert.alert('Logout Confirm', 'Are you sure?',[
@@ -48,10 +28,6 @@ const Header = () => {
 
     const handleSettings = () => {
         navigation.navigate('Settings')
-    }
-
-    if(loading){
-        return <LoadingScreen/>
     }
 
     return (
@@ -80,12 +56,35 @@ const Header = () => {
 }
 
 const HomeScreen = () => {
-  return (
-    <View style={styles.container}>
-        <Header/>
-        <Leaderboard/>
-    </View>
-  )
+
+    const [loading, setLoading] = useState(true)
+    const [userdata, setUserdata] = useState(null);
+
+    useEffect(()=>{
+        getData();
+    },[])
+
+    const getData = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('userdata');
+        setUserdata(JSON.parse(userData))
+      } catch (error) {
+        console.error('error at App.js->getData: ', error);
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if(loading){
+        return <LoadingScreen/>
+    }
+
+    return (
+        <View style={styles.container}>
+            <Header userdata={userdata} />
+            <Leaderboard/>
+        </View>
+    )
 }
 
 export default HomeScreen
