@@ -5,7 +5,8 @@ import { Alert } from "react-native";
 import { formatDateToString } from "./common";
 
 const getMatchStats = async () => {
-    const matchesCol = collection(db, 'matches_test');
+    const matchesCol = collection(db, 'matches');
+    //const matchesCol = collection(db, 'matches_test');
     
     // Calculate the date for two weeks ago
     const twoWeeksAgo = new Date();
@@ -44,7 +45,8 @@ const saveMatch = async (matchData) => {
     try {
         const res = await getAllAsyncData();
         const userdata = JSON.parse(res.userdata);
-        const matchesCol = collection(db, 'matches_test');
+        const matchesCol = collection(db, 'matches');
+        //const matchesCol = collection(db, 'matches_test');
 
         const formData = {
             ...matchData,
@@ -74,7 +76,8 @@ const deleteMatch = async (id) => {
 
         let res = await getAllAsyncData();
         let userdata = JSON.parse(res.userdata);
-        const matchesCol = collection(db, 'matches_test');
+        const matchesCol = collection(db, 'matches');
+        //const matchesCol = collection(db, 'matches_test');
 
         const formData = {
             modifiedBy: userdata.username,
