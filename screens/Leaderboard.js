@@ -50,30 +50,37 @@ const Leaderboard = () => {
                         name: playerData.name,
                         image: playerData.image,
                         total_matches: 1,
-                        total_wins: player.match_stt == 'won' ? 1 : 0,
-                        total_points: player.points,
-                        total_minus_points: player.minus_points,
+                        total_wins: player.match_stt === 'won' ? 1 : 0,
+                        total_plus_points: player.points ?? 0,
+                        total_minus_points: player.minus_points ?? 0,
                         total_red_pots: player.red_pot ? 1 : 0,
-                        total_foul: player.foul,
+                        total_foul: player.foul ?? 0,
+                        total_special: player.special_points ?? 0
                     });
                 } else {
                     playersArr[existingPlayerIndex].total_matches++;
                     if (player.match_stt == 'won') {
                         playersArr[existingPlayerIndex].total_wins++;
                     }
-                    playersArr[existingPlayerIndex].total_points += player.points;
-                    playersArr[existingPlayerIndex].total_minus_points += player.minus_points;
+                    playersArr[existingPlayerIndex].total_plus_points += player.points ?? 0;
+                    playersArr[existingPlayerIndex].total_minus_points += player.minus_points ?? 0;
                     if (player.red_pot) {
                         playersArr[existingPlayerIndex].total_red_pots++;
                     }
-                    playersArr[existingPlayerIndex].total_foul += player.foul;
+                    playersArr[existingPlayerIndex].total_foul += player.foul ?? 0;
+                    playersArr[existingPlayerIndex].total_special += player.special_points ?? 0;
                 }
             });
         });
     
         // Calculate value and sort players
         playersArr.forEach((player) => {
-            let value = ((player.total_points + (player.total_red_pots * 2) + (player.total_wins * 3) - player.total_minus_points - (player.total_foul * 2)) / (player.total_matches)).toFixed(2);
+
+            let totalPoints = ((player.total_plus_points * 1) + (player.total_red_pots * 2) + (player.total_wins * 3) + (player.total_special * 1) + (player.total_minus_points * -1) + (player.total_foul * -2));
+
+            let value = (totalPoints / player.total_matches).toFixed(2);
+            
+            player.total_points = parseFloat(totalPoints).toFixed(2);
             player.value = parseFloat(value) >= 0 ? value : '0';
         });
     

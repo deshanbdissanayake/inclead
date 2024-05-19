@@ -47,11 +47,21 @@ const PlayerSingle = () => {
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Plus Points</Text>
             <View style={styles.dataTextWrapper}>
-              <Text style={styles.dataTextStyles}>{playerData.total_points}</Text>
+              <Text style={styles.dataTextStyles}>{playerData.total_plus_points}</Text>
               <Text style={styles.dataTextStyles}>x</Text>
               <Text style={styles.dataTextStyles}>1</Text>
               <Text style={styles.dataTextStyles}>=</Text>
-              <Text style={styles.dataTextStyles}>{playerData.total_points * 1}</Text>
+              <Text style={styles.dataTextStyles}>{playerData.total_plus_points * 1}</Text>
+            </View>
+          </View>
+          <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Total Minus Points</Text>
+            <View style={styles.dataTextWrapper}>
+              <Text style={styles.dataTextStyles}>{playerData.total_minus_points}</Text>
+              <Text style={styles.dataTextStyles}>x</Text>
+              <Text style={styles.dataTextStyles}>-1</Text>
+              <Text style={styles.dataTextStyles}>=</Text>
+              <Text style={styles.dataTextStyles}>{playerData.total_minus_points * -1}</Text>
             </View>
           </View>
           <View style={styles.rowStyles}>
@@ -75,16 +85,6 @@ const PlayerSingle = () => {
             </View>
           </View>
           <View style={styles.rowStyles}>
-            <Text style={styles.headerTextStyles}>Total Minus Points</Text>
-            <View style={styles.dataTextWrapper}>
-              <Text style={styles.dataTextStyles}>{playerData.total_minus_points}</Text>
-              <Text style={styles.dataTextStyles}>x</Text>
-              <Text style={styles.dataTextStyles}>-1</Text>
-              <Text style={styles.dataTextStyles}>=</Text>
-              <Text style={styles.dataTextStyles}>{playerData.total_minus_points * -1}</Text>
-            </View>
-          </View>
-          <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Foul Points</Text>
             <View style={styles.dataTextWrapper}>
               <Text style={styles.dataTextStyles}>{playerData.total_foul}</Text>
@@ -94,9 +94,15 @@ const PlayerSingle = () => {
               <Text style={styles.dataTextStyles}>{playerData.total_foul * -2}</Text>
             </View>
           </View>
+          <View style={styles.rowStyles}>
+            <Text style={styles.headerTextStyles}>Total Special Points</Text>
+            <View style={[styles.dataTextWrapper, { justifyContent: 'flex-end' }]}>
+              <Text style={styles.dataTextStyles}>{playerData.total_special}</Text>
+            </View>
+          </View>
           <View style={[styles.rowStyles, {borderTopWidth: 2}]}>
             <Text style={styles.headerTextStyles}>Total Points</Text>
-            <Text style={styles.dataTextStyles}>{(playerData.total_points + (playerData.total_red_pots * 2) + (playerData.total_wins * 3) - playerData.total_minus_points - (playerData.total_foul * 2))}</Text>
+            <Text style={styles.dataTextStyles}>{playerData.total_points}</Text>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Total Matches</Text>
@@ -116,7 +122,7 @@ const PlayerSingle = () => {
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Avg Plus Points Per Match</Text>
-            <Text style={styles.dataTextStyles}>{(playerData.total_points / playerData.total_matches).toFixed(2)}</Text>
+            <Text style={styles.dataTextStyles}>{(playerData.total_plus_points / playerData.total_matches).toFixed(2)}</Text>
           </View>
           <View style={styles.rowStyles}>
             <Text style={styles.headerTextStyles}>Avg Minus Points Per Match</Text>
