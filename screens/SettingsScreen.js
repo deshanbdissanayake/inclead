@@ -5,7 +5,7 @@ import Header from '../components/general/Header'
 import { useNavigation } from '@react-navigation/native'
 import { useAppContext } from '../context/AppContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { FontAwesome5, FontAwesome6, MaterialIcons } from '@expo/vector-icons'
+import { FontAwesome5, FontAwesome6, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
 
 const SettingsScreen = () => {
     const navigation = useNavigation();
@@ -36,6 +36,10 @@ const SettingsScreen = () => {
         navigation.navigate('User List')
     }
 
+    const handleConfig = () => {
+        navigation.navigate('Config Screen')
+    }
+
     return (
         <View style={styles.container}>
             <Header text={'Settings'} handleGoBack={handleGoBack} />
@@ -48,6 +52,10 @@ const SettingsScreen = () => {
                 <TouchableOpacity onPress={handleUsers} style={styles.btnWrapper}>
                     <FontAwesome6 name="users-gear" size={20} color={colors.textColorPri} />
                     <Text style={styles.btnTextStyles}>Users</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleConfig} style={styles.btnWrapper}>
+                    <MaterialCommunityIcons name="cog-counterclockwise" size={24} color={colors.textColorPri} />
+                    <Text style={styles.btnTextStyles}>Config</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleLogout} style={styles.btnWrapper}>
                     <MaterialIcons name="logout" size={24} color={colors.textColorPri} />

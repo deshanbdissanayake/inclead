@@ -65,7 +65,7 @@ const LoginScreen = () => {
           <Text style={styles.welcomeTextStyles}>Welcome</Text>
           <Text style={styles.welcomeSubTextStyles}>to INCLEAD</Text>
           <Text style={styles.welcomeDescTextStyles}>Introps Carrom Leaderboard</Text>
-          <Image style={styles.welcomeImageStyles} source={require('../assets/images/carrom_logo.jpg')} />
+          <Image style={styles.welcomeImageStyles} source={require('../assets/images/carrom_logo.png')} />
         </View>
         <View style={styles.formItemWrapper}>
           <Input

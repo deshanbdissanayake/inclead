@@ -13,7 +13,7 @@ import { formatDateToObject } from '../assets/data/common';
 const MatchSingle = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const { matchData } = route.params;
+    const { matchData, hideDelete = false } = route.params || {};
 
     const startedAtDate = formatDateToObject(matchData.startedAt);
     const endedAtDate = formatDateToObject(matchData.endedAt);
@@ -87,7 +87,7 @@ const MatchSingle = () => {
 
                 <View style={styles.teamPlayersWrapper}>
                     {teamData[team].map((player, i) => {
-                        const totalPoints = ((parseFloat(player.points) * 1) + (parseFloat(player.red_pot) * 2) + ((player.match_stt === 'won' ? 1 : 0) * 3 ) + (parseFloat(player.special_points) * 1) + (parseFloat(player.minus_points) * -1) + (parseFloat(player.foul) * -2)).toFixed(2);
+                        const totalPoints = ((parseFloat(player.points) * 1) + (parseFloat(player.red_pot) * 2) + ((player.match_stt === 'won' ? 1 : 0) * 3 ) + (parseFloat(player.special_points || 0) * 1) + (parseFloat(player.minus_points) * -1) + (parseFloat(player.foul) * -2)).toFixed(2);
                         
                         return (
                             <View style={styles.playerDataWrapper} key={i}>
@@ -149,7 +149,7 @@ const MatchSingle = () => {
                                     <View style={styles.rowWrapper}>
                                         <Text style={styles.titleTextStyles}>Special Points</Text>
                                         <View style={[styles.dataTextWrapper, {justifyContent: 'flex-end'}]}>
-                                            <Text style={styles.dataTextStyles}>{parseFloat(player.special_points) * 1}</Text>
+                                            <Text style={styles.dataTextStyles}>{parseFloat(player.special_points || 0) * 1}</Text>
                                         </View>
                                     </View>
                                     <View style={[styles.rowWrapper, styles.totalBgWrapper]}>
@@ -183,7 +183,7 @@ const MatchSingle = () => {
                 {renderTeam('white')}
                 {renderTeam('black')}
 
-                {asyncUserData.usertype === 'admin' && (
+                {(!hideDelete && asyncUserData.usertype === 'admin') && (
                     <View style={styles.btnWrapper}>
                         <Button
                             bgColor={colors.danger}

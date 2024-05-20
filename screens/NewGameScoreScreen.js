@@ -11,8 +11,8 @@ import { Entypo } from '@expo/vector-icons'
 import BottomSheet from '@gorhom/bottom-sheet';
 import LoadingScreen from './LoadingScreen'
 import { saveMatch } from '../assets/data/matches'
-import { getAllAsyncData } from '../assets/data/async_storage'
 import { formatDateToString } from '../assets/data/common'
+import { getConfig } from '../assets/data/config'
 
 const NewGameScoreScreen = () => {
     const navigation = useNavigation();
@@ -20,104 +20,132 @@ const NewGameScoreScreen = () => {
 
     const { teamWhite, teamBlack, currentDateTime } = route.params;
 
-    if(teamWhite.length == 1){
-        // two players
-        let white_player_1_avg = parseFloat(teamWhite[0].avg_points);
-        let black_player_1_avg = parseFloat(teamBlack[0].avg_points);
-
-        //console.log('hi', white_player_1_avg, black_player_1_avg)
-
-        let white_sp = 0;
-        let black_sp = 0;
-
-        if (white_player_1_avg >= 8 && black_player_1_avg < 8) {
-            black_sp = white_player_1_avg - black_player_1_avg;
-            white_sp = black_player_1_avg - white_player_1_avg;
-        } else if (white_player_1_avg >= 4) {
-            if (black_player_1_avg >= 8) {
-                white_sp = black_player_1_avg - white_player_1_avg;
-                black_sp = white_player_1_avg - black_player_1_avg;
-            } else if (black_player_1_avg < 4) {
-                black_sp = white_player_1_avg - black_player_1_avg;
-                white_sp = black_player_1_avg - white_player_1_avg;
-            }
-        } else if (black_player_1_avg >= 4) {
-            white_sp = black_player_1_avg - white_player_1_avg;
-            black_sp = white_player_1_avg - black_player_1_avg;
-        }
-
-        teamWhite[0].special_points = white_sp.toFixed(2);
-        teamBlack[0].special_points = black_sp.toFixed(2);
-    }else{
-        // four players
-        let white_player_1_avg = parseFloat(teamWhite[0].avg_points);
-        let white_player_2_avg = parseFloat(teamWhite[1].avg_points);
-        let black_player_1_avg = parseFloat(teamBlack[0].avg_points);
-        let black_player_2_avg = parseFloat(teamBlack[1].avg_points);
-
-        //console.log('hi', white_player_1_avg, white_player_2_avg, black_player_1_avg, black_player_2_avg)
-
-        let white_sp = 0;
-        let black_sp = 0;
-
-        if (white_player_1_avg >= 8 || white_player_2_avg >= 8) {
-            if (black_player_1_avg < 8 && black_player_2_avg < 8) {
-                let white_player_sum = ((white_player_1_avg >= 8 ? white_player_1_avg : 0) + (white_player_2_avg >= 8 ? white_player_2_avg : 0));
-                let white_player_cnt = ((white_player_1_avg >= 8 ? 1 : 0) + (white_player_2_avg >= 8 ? 1 : 0));
-                let black_player_avg = (black_player_1_avg + black_player_2_avg) / 2;
-                let tot_avg = white_player_sum/white_player_cnt;
-        
-                black_sp = tot_avg - black_player_avg;
-                white_sp = black_player_avg - tot_avg;
-            }
-        } else if (black_player_1_avg >= 8 || black_player_2_avg >= 8) {
-            if (white_player_1_avg < 8 && white_player_2_avg < 8) {
-                let black_player_sum = ((black_player_1_avg >= 8 ? black_player_1_avg : 0) + (black_player_2_avg >= 8 ? black_player_2_avg : 0));
-                let black_player_cnt = ((black_player_1_avg >= 8 ? 1 : 0) + (black_player_2_avg >= 8 ? 1 : 0));
-                let white_player_avg = (white_player_1_avg + white_player_2_avg) / 2;
-                let tot_avg = black_player_sum/black_player_cnt;
-        
-                white_sp = tot_avg - white_player_avg;
-                black_sp = white_player_avg - tot_avg;
-            }
-        } else if (white_player_1_avg >= 4 || white_player_2_avg >= 4) {
-            if (black_player_1_avg < 4 && black_player_2_avg < 4) {
-                let white_player_sum = ((white_player_1_avg >= 4 ? white_player_1_avg : 0) + (white_player_2_avg >= 4 ? white_player_2_avg : 0));
-                let white_player_cnt = ((white_player_1_avg >= 4 ? 1 : 0) + (white_player_2_avg >= 4 ? 1 : 0));
-                let black_player_avg = (black_player_1_avg + black_player_2_avg) / 2;
-                let tot_avg = white_player_sum/white_player_cnt;
-        
-                black_sp = tot_avg - black_player_avg;
-                white_sp = black_player_avg - tot_avg;
-            }
-        } else if (black_player_1_avg >= 4 || black_player_2_avg >= 4) {
-            if (white_player_1_avg < 4 && white_player_2_avg < 4) {
-                let black_player_sum = ((black_player_1_avg >= 4 ? black_player_1_avg : 0) + (black_player_2_avg >= 4 ? black_player_2_avg : 0));
-                let black_player_cnt = ((black_player_1_avg >= 4 ? 1 : 0) + (black_player_2_avg >= 4 ? 1 : 0));
-                let white_player_avg = (white_player_1_avg + white_player_2_avg) / 2;
-                let tot_avg = black_player_sum/black_player_cnt;
-        
-                white_sp = tot_avg - white_player_avg;
-                black_sp = white_player_avg - tot_avg;
-            }
-        }
-
-        teamWhite[0].special_points = white_sp.toFixed(2);
-        teamWhite[1].special_points = white_sp.toFixed(2);
-        teamBlack[0].special_points = black_sp.toFixed(2);
-        teamBlack[1].special_points = black_sp.toFixed(2);
-    }
-
     const bottomSheetRef = useRef(null);
     const snapPoints = useMemo(() => [1, '30%', '50%'], []);
 
-    const [loading, setLoading] = useState(true);
 
+    const [loading, setLoading] = useState(true);
     const [matchData, setMatchData] = useState({
         players: [],
     });
 
-    const setMatchDataFunc = () => {
+    const getConfigData = async () => {
+        try {
+            let res = await getConfig();
+            await setSpecialPointsFunc(res.strongLimit, res.weakLimit);
+            await setMatchDataFunc()
+        } catch (error) {
+            console.error('error at NewGameScoreScreen.js -> getConfigData')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const setSpecialPointsFunc = async (strongLimit, weakLimit) => {
+        if(teamWhite.length == 1){
+            // two players
+            let white_player_1_avg = parseFloat(teamWhite[0].avg_points);
+            let black_player_1_avg = parseFloat(teamBlack[0].avg_points);
+    
+            let white_sp = 0;
+            let black_sp = 0;
+    
+            if (white_player_1_avg >= strongLimit && black_player_1_avg < strongLimit) {
+                black_sp = white_player_1_avg - black_player_1_avg;
+                white_sp = black_player_1_avg - white_player_1_avg;
+            } else if (white_player_1_avg >= weakLimit && white_player_1_avg < strongLimit) {
+                if (black_player_1_avg >= strongLimit) {
+                    white_sp = black_player_1_avg - white_player_1_avg;
+                    black_sp = white_player_1_avg - black_player_1_avg;
+                } else if (black_player_1_avg < weakLimit) {
+                    black_sp = white_player_1_avg - black_player_1_avg;
+                    white_sp = black_player_1_avg - white_player_1_avg;
+                }
+            } else if (black_player_1_avg >= weakLimit) {
+                white_sp = black_player_1_avg - white_player_1_avg;
+                black_sp = white_player_1_avg - black_player_1_avg;
+            }
+    
+            teamWhite[0].special_points = white_sp.toFixed(2);
+            teamBlack[0].special_points = black_sp.toFixed(2);
+        }else{
+            // four players
+            let white_player_1_avg = parseFloat(teamWhite[0].avg_points);
+            let white_player_2_avg = parseFloat(teamWhite[1].avg_points);
+            let black_player_1_avg = parseFloat(teamBlack[0].avg_points);
+            let black_player_2_avg = parseFloat(teamBlack[1].avg_points);
+    
+            let white_sp = 0;
+            let black_sp = 0;
+    
+            if (white_player_1_avg >= strongLimit || white_player_2_avg >= strongLimit) {
+                if (black_player_1_avg < strongLimit && black_player_2_avg < strongLimit) {
+    
+                    let white_player_sum = ((white_player_1_avg >= strongLimit ? white_player_1_avg : 0) + (white_player_2_avg >= strongLimit ? white_player_2_avg : 0));
+                    let white_player_cnt = ((white_player_1_avg >= strongLimit ? 1 : 0) + (white_player_2_avg >= strongLimit ? 1 : 0));
+                    let white_player_avg = white_player_sum/white_player_cnt;
+    
+                    let black_player_avg = (black_player_1_avg + black_player_2_avg) / 2;
+                    if(black_player_1_avg >= weakLimit || black_player_2_avg >= weakLimit){
+                        let black_player_sum = ((black_player_1_avg >= weakLimit ? black_player_1_avg : 0) + (black_player_2_avg >= weakLimit ? black_player_2_avg : 0));
+                        let black_player_cnt = ((black_player_1_avg >= weakLimit ? 1 : 0) + (black_player_2_avg >= weakLimit ? 1 : 0));
+                        black_player_avg = black_player_sum/black_player_cnt;
+                    }
+    
+                    black_sp = white_player_avg - black_player_avg;
+                    white_sp = black_player_avg - white_player_avg;
+                }
+            } else if (black_player_1_avg >= strongLimit || black_player_2_avg >= strongLimit) {
+                if (white_player_1_avg < strongLimit && white_player_2_avg < strongLimit) {
+    
+                    let black_player_sum = ((black_player_1_avg >= strongLimit ? black_player_1_avg : 0) + (black_player_2_avg >= strongLimit ? black_player_2_avg : 0));
+                    let black_player_cnt = ((black_player_1_avg >= strongLimit ? 1 : 0) + (black_player_2_avg >= strongLimit ? 1 : 0));
+                    let black_player_avg = black_player_sum/black_player_cnt;
+    
+                    let white_player_avg = (white_player_1_avg + white_player_2_avg) / 2;
+                    if(white_player_1_avg >= weakLimit || white_player_2_avg >=weakLimit){
+                        let white_player_sum = ((white_player_1_avg >= weakLimit ? white_player_1_avg : 0) + (white_player_2_avg >= weakLimit ? white_player_2_avg : 0));
+                        let white_player_cnt = ((white_player_1_avg >= weakLimit ? 1 : 0) + (white_player_2_avg >= weakLimit ? 1 : 0));
+                        white_player_avg = white_player_sum/white_player_cnt;
+                    }
+    
+                    white_sp = black_player_avg - white_player_avg;
+                    black_sp = white_player_avg - black_player_avg;
+                }
+            } else if (white_player_1_avg >= weakLimit || white_player_2_avg >= weakLimit) {
+                if (black_player_1_avg < weakLimit && black_player_2_avg < weakLimit) {
+    
+                    let white_player_sum = ((white_player_1_avg >= weakLimit ? white_player_1_avg : 0) + (white_player_2_avg >= weakLimit ? white_player_2_avg : 0));
+                    let white_player_cnt = ((white_player_1_avg >= weakLimit ? 1 : 0) + (white_player_2_avg >= weakLimit ? 1 : 0));
+                    let white_player_avg = white_player_sum/white_player_cnt;
+    
+                    let black_player_avg = (black_player_1_avg + black_player_2_avg) / 2;
+    
+                    black_sp = white_player_avg - black_player_avg;
+                    white_sp = black_player_avg - white_player_avg;
+                }
+            } else if (black_player_1_avg >= weakLimit || black_player_2_avg >= weakLimit) {
+                if (white_player_1_avg < weakLimit && white_player_2_avg < weakLimit) {
+    
+                    let black_player_sum = ((black_player_1_avg >= weakLimit ? black_player_1_avg : 0) + (black_player_2_avg >= weakLimit ? black_player_2_avg : 0));
+                    let black_player_cnt = ((black_player_1_avg >= weakLimit ? 1 : 0) + (black_player_2_avg >= weakLimit ? 1 : 0));
+                    let black_player_avg = black_player_sum/black_player_cnt;
+    
+                    let white_player_avg = (white_player_1_avg + white_player_2_avg) / 2;
+    
+                    white_sp = black_player_avg - white_player_avg;
+                    black_sp = white_player_avg - black_player_avg;
+                }
+            }
+    
+            teamWhite[0].special_points = white_sp.toFixed(2);
+            teamWhite[1].special_points = white_sp.toFixed(2);
+            teamBlack[0].special_points = black_sp.toFixed(2);
+            teamBlack[1].special_points = black_sp.toFixed(2);
+        }
+    }
+
+    const setMatchDataFunc = async () => {
         const match = {
             players: [],
         };
@@ -143,11 +171,10 @@ const NewGameScoreScreen = () => {
         addPlayersToMatch(teamBlack, 'black');
     
         setMatchData(match); 
-        setLoading(false)
     };
 
     useEffect(()=>{
-        setMatchDataFunc()
+        getConfigData()
     },[])
 
     const changePlayerData = (newValue, player_id, type) => {
@@ -222,20 +249,20 @@ const NewGameScoreScreen = () => {
             let special_points;
             if (player.team === type) {
                 // won
-                if (player.special_points > 0) {
-                    special_points = parseFloat(player.special_points);
-                } else {
+                if (player.special_points > 0) { //weak
+                    special_points = player.special_points;
+                } else { //strong
                     special_points = 0;
                 }
             } else {
                 // lost
-                if (player.special_points < 0) {
-                    special_points = parseFloat(player.special_points);
-                } else {
+                if (player.special_points < 0) { //strong
+                    special_points = player.special_points;
+                } else { //weak
                     special_points = 0;
                 }
             }
-        
+            
             return {
                 ...player,
                 match_stt: player.team === type ? 'won' : 'lost',

@@ -64,7 +64,7 @@ const NewGameScoreViewScreen = () => {
     }
 
     const handleMatchSingle = () => {
-        navigation.navigate('Match Single', { matchData: matchData })
+        navigation.navigate('Match Single', { matchData: matchData, hideDelete: true })
     }
 
     return (

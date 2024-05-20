@@ -7,6 +7,7 @@ import MatchList from '../screens/MatchList';
 import MatchSingle from '../screens/MatchSingle';
 import SettingsScreen from '../screens/SettingsScreen';
 import UsersList from '../screens/UsersList';
+import ConfigScreen from '../screens/ConfigScreen';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ const HomeNav = () => {
         <Stack.Screen name="Match Single" component={MatchSingle} options={{headerShown: false}} />
         <Stack.Screen name="Settings" component={SettingsScreen} options={{headerShown: false}} />
         <Stack.Screen name="User List" component={UsersList} options={{headerShown: false}} />
+        <Stack.Screen name="Config Screen" component={ConfigScreen} options={{headerShown: false}} />
     </Stack.Navigator>
   )
 }

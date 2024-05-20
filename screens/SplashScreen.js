@@ -5,7 +5,7 @@ import { colors } from '../assets/colors/colors'
 const SplashScreen = () => {
   return (
     <View style={styles.container}>
-      <Image style={styles.imageStyles} source={require('../assets/images/carrom_logo.jpg')} />
+      <Image style={styles.imageStyles} source={require('../assets/images/carrom_logo.png')} />
     </View>
   )
 }
