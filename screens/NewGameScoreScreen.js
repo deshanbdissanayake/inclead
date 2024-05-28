@@ -246,21 +246,12 @@ const NewGameScoreScreen = () => {
         const endtDateTime = new Date();
 
         const updatedPlayers = matchData.players.map((player) => {
-            let special_points;
+            let special_points = 0;
+
             if (player.team === type) {
-                // won
-                if (player.special_points > 0) { //weak
-                    special_points = player.special_points;
-                } else { //strong
-                    special_points = 0;
-                }
+                special_points = player.special_points > 0 ? player.special_points : 0;
             } else {
-                // lost
-                if (player.special_points < 0) { //strong
-                    special_points = player.special_points;
-                } else { //weak
-                    special_points = 0;
-                }
+                special_points = player.special_points < 0 ? player.special_points : 0;
             }
             
             return {
